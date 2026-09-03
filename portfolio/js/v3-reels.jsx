@@ -38,7 +38,7 @@ function ProjectReel({ kind }) {
       const t = (now - t0) / 1000;
       const g = {
         ctx, t, clamp, ease, easeIO, ...H2,
-        A: V("--accent", "#2b50e2"), INK: V("--ink", "#16140f"), INK2: V("--ink-2", "#524e48"),
+        A: V("--accent", "#be123c"), INK: V("--ink", "#16140f"), INK2: V("--ink-2", "#524e48"),
         INK3: V("--ink-3", "#6e695e"), LINE: V("--line-2", "rgba(0,0,0,.18)"), SURF: V("--surface", "#fff"),
         PAPER: V("--paper", "#f4f1ea"), green: "#1f9d57", red: "#e23b5a", amber: "#e0922b",
       };

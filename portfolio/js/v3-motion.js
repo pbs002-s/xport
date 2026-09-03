@@ -263,7 +263,7 @@
       if (reduced()) { ctx.clearRect(0, 0, w, h); return; }
       const dark = document.documentElement.dataset.theme === "dark";
       const accent = getComputedStyle(document.documentElement)
-        .getPropertyValue("--accent").trim() || "#1f6feb";
+        .getPropertyValue("--accent").trim() || "#be123c";
       const [H, S0] = hexToHsl(accent);
       const S = clamp(S0, 40, 80);
       const L = dark ? 48 : 74;

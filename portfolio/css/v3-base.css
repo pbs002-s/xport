@@ -5,8 +5,8 @@
 
 /* ---------- design tokens ---------- */
 :root {
-  --accent: #1f6feb;            /* default — user-switchable */
-  --accent-soft: rgba(31,111,235,.10);
+  --accent: #be123c;            /* default — user-switchable */
+  --accent-soft: rgba(190,18,60,.10);
 
   --font-display: "Inter Tight", "Inter", system-ui, -apple-system, sans-serif;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;

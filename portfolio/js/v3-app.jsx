@@ -130,7 +130,7 @@ function ThemeStudio({ mode, setMode, accent, setAccent, aurora, setAurora, grai
 
 function AppV3() {
   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-    "accent": "#1f6feb",
+    "accent": "#be123c",
     "grain": true,
     "aurora": true
   }/*EDITMODE-END*/;
@@ -163,7 +163,12 @@ function AppV3() {
   /* restore the saved accent once on mount */
   useEffect(() => {
     const saved = readLS("pb-accent", "");
-    if (saved && saved !== t.accent) setTweak("accent", saved);
+    if (saved === "#1f6feb") {
+      setTweak("accent", "#be123c");
+      writeLS("pb-accent", "#be123c");
+    } else if (saved && saved !== t.accent) {
+      setTweak("accent", saved);
+    }
   }, []);
 
   useEffect(() => {

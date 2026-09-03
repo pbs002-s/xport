@@ -114,7 +114,7 @@ function TechNetwork() {
     let flow = 0;
     function draw() {
       flow += 0.6;
-      const accent = cssVar("--accent", "#2b50e2");
+      const accent = cssVar("--accent", "#be123c");
       const ink = cssVar("--ink", "#16140f"), ink2 = cssVar("--ink-2", "#5a5650"), ink3 = cssVar("--ink-3", "#948e82");
       const line = cssVar("--line-2", "rgba(0,0,0,.2)");
       const paper = cssVar("--surface", "#fff");
