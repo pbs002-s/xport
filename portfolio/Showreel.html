@@ -213,36 +213,6 @@
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
             />
-
-            <button
-              type="button"
-              className={"reel-floating-unmute " + (isMuted ? "muted" : "unmuted")}
-              onClick={toggleSound}
-            >
-              <span>{isMuted ? "🔇 SOUND OFF · Click for audio" : "🔊 SOUND ON"}</span>
-            </button>
-
-            <div className="rl-scrub" onClick={(e) => e.stopPropagation()}>
-              <button
-                type="button"
-                className="rl-ctl"
-                style={{ background: "transparent", border: "1px solid rgba(255,255,255,.2)", borderRadius: 999, color: "#fff", padding: "5px 12px", cursor: "pointer" }}
-                onClick={togglePlay}
-              >
-                {isPlaying ? "❚❚ Pause" : "▶ Play"}
-              </button>
-              <div className="rl-scrub-bar" onClick={handleScrub}>
-                <div className="rl-scrub-fill" style={{ width: `${progress}%` }}></div>
-              </div>
-              <span className="rl-time">{time} / {duration}</span>
-              <button
-                type="button"
-                style={{ background: !isMuted ? "var(--accent)" : "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.25)", borderRadius: 999, color: "#fff", padding: "5px 14px", font: "inherit", cursor: "pointer" }}
-                onClick={toggleSound}
-              >
-                {!isMuted ? "🔊 Sound ON" : "🔇 Sound OFF"}
-              </button>
-            </div>
           </div>
 
           <div className="rl-meta">
@@ -256,7 +226,7 @@
                 className={!isMuted ? "active" : ""}
                 onClick={toggleSound}
               >
-                {!isMuted ? "🔊 Sound ON" : "🔇 Sound OFF"}
+                {!isMuted ? "Sound ON" : "Sound OFF"}
               </button>
               <button type="button" onClick={togglePlay}>
                 {isPlaying ? "❚❚ Pause" : "▶ Play"}

@@ -80,6 +80,146 @@ function scenes(g, n, dur) {
 function bodyClip(g, x, y, w, h) { g.ctx.save(); g.ctx.beginPath(); g.rr(x, y, w, h, 6); g.ctx.clip(); }
 
 /* ============================================================
+   EDUSYNC — digital university platform: 4 portals, realtime chat, routine, grading.
+   0 4-portal shell  1 Socket.IO & Redis chat  2 routine conflict check  3 submission & grading
+============================================================ */
+REEL_DRAW.edusync = function (g) {
+  const { ctx, w, h, t, PAD, A, INK, INK2, INK3, LINE, SURF, PAPER, green, amber, red, T, rr, dot, clamp, ease, easeIO } = g;
+  const { idx, lo, sl } = scenes(g, 4, 2.5);
+
+  ctx.fillStyle = SURF; ctx.strokeStyle = LINE; ctx.lineWidth = 1;
+  rr(PAD, PAD, w - 2 * PAD, h * 0.12, 5); ctx.fill(); ctx.stroke();
+  dot(PAD + 15, PAD + h * 0.06, 5, A);
+  T("EduSync · University OS", PAD + 28, PAD + h * 0.078, Math.round(w * 0.025), INK, "left", 600);
+  T(["4 portals", "Socket.IO chat", "routine engine", "grading queue"][idx], w - PAD - 10, PAD + h * 0.078, Math.round(w * 0.022), INK3, "right");
+
+  const bx = PAD, by = PAD + h * 0.16, bw = w - 2 * PAD, bh = h - by - PAD - h * 0.06;
+  ctx.save(); ctx.translate(sl, 0);
+
+  if (idx === 0) {
+    /* 4 role-scoped portals */
+    T("4 Role-Scoped Portals", bx, by + h * 0.045, Math.round(w * 0.026), INK, "left", 600);
+    const portals = [
+      ["Student", "Courses · Routine · Quizzes", green],
+      ["Teacher", "Grading Queue · Attendance", A],
+      ["Super Admin", "404-Invisibility · Depts", amber],
+      ["Authority", "Proctor · Lost & Found", "#3b82f6"]
+    ];
+    const pw = (bw - 10) / 2, ph = bh * 0.38;
+    portals.forEach((p, i) => {
+      const col = i % 2, row = Math.floor(i / 2);
+      const px = bx + col * (pw + 10), py = by + bh * 0.12 + row * (ph + 10);
+      const pr = easeIO(clamp((lo - 0.15 - i * 0.15) / 0.4, 0, 1));
+      if (pr <= 0) return;
+      ctx.globalAlpha = pr;
+      const isTarget = i === 0;
+      ctx.fillStyle = isTarget ? "rgba(31,111,235,.06)" : SURF;
+      ctx.strokeStyle = isTarget ? A : LINE;
+      ctx.lineWidth = isTarget ? 1.5 : 1;
+      rr(px, py, pw, ph, 5); ctx.fill(); ctx.stroke();
+      dot(px + 12, py + ph * 0.3, 4, p[2]);
+      T(p[0], px + 24, py + ph * 0.36, Math.round(w * 0.023), INK, "left", 600);
+      T(p[1], px + 12, py + ph * 0.72, Math.round(w * 0.018), INK3);
+      ctx.globalAlpha = 1;
+    });
+    if (lo > 1.2) {
+      T("Unified React 19 shell · RBAC strictly enforced", bx, by + bh * 0.96, Math.round(w * 0.021), green);
+    }
+
+  } else if (idx === 1) {
+    /* Socket.IO + Redis Pub/Sub realtime messaging */
+    T("Socket.IO + Redis Pub/Sub", bx, by + h * 0.045, Math.round(w * 0.026), INK, "left", 600);
+    dot(bx + bw - 100, by + h * 0.038, 4, green);
+    T("ws://live:6002", bx + bw, by + h * 0.045, Math.round(w * 0.02), green, "right");
+
+    const chatCardH = bh * 0.76;
+    ctx.fillStyle = SURF; ctx.strokeStyle = LINE; rr(bx, by + bh * 0.1, bw, chatCardH, 5); ctx.fill(); ctx.stroke();
+    bodyClip(g, bx, by + bh * 0.1, bw, chatCardH);
+
+    // message 1
+    const p1 = easeIO(clamp(lo / 0.5, 0, 1));
+    if (p1 > 0) {
+      ctx.globalAlpha = p1;
+      const mw = bw * 0.65, mx = bx + 10, my = by + bh * 0.16;
+      ctx.fillStyle = PAPER; ctx.strokeStyle = LINE; rr(mx, my, mw, bh * 0.22, 6); ctx.fill(); ctx.stroke();
+      T("Study Group · CSE-311", mx + 10, my + bh * 0.08, Math.round(w * 0.019), A, "left", 600);
+      T("Midterm review session today at 4 PM?", mx + 10, my + bh * 0.16, Math.round(w * 0.021), INK);
+      ctx.globalAlpha = 1;
+    }
+
+    // message 2 (reply)
+    const p2 = easeIO(clamp((lo - 0.7) / 0.5, 0, 1));
+    if (p2 > 0) {
+      ctx.globalAlpha = p2;
+      const mw = bw * 0.55, mx = bx + bw - mw - 10, my = by + bh * 0.44;
+      ctx.fillStyle = A; rr(mx, my, mw, bh * 0.22, 6); ctx.fill();
+      T("Yes! Room 402 is booked.", mx + 10, my + bh * 0.13, Math.round(w * 0.021), "#fff");
+      T("Delivered · 12ms", mx + mw - 10, my + bh * 0.185, Math.round(w * 0.017), "rgba(255,255,255,.8)", "right");
+      ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+
+    if (lo > 1.4) {
+      T("Redis channel: chat:group:cse311 broadcasted", bx, by + bh * 0.95, Math.round(w * 0.021), INK3);
+    }
+
+  } else if (idx === 2) {
+    /* Academic routine conflict engine */
+    T("Routine Engine · Collision Free", bx, by + h * 0.045, Math.round(w * 0.026), INK, "left", 600);
+    const slots = [
+      ["08:30 - 10:00", "CSE-221 (Algorithms)", "Room 601", green],
+      ["10:00 - 11:30", "CSE-311 (Database)", "Room 504", green],
+      ["11:30 - 01:00", "Proposed: PHY-102", "Conflict: [11:30, 12:00)", red],
+    ];
+    slots.forEach((s, i) => {
+      const p = easeIO(clamp((lo - 0.2 - i * 0.25) / 0.4, 0, 1));
+      if (p <= 0) return;
+      const y = by + bh * 0.12 + i * bh * 0.23;
+      ctx.globalAlpha = p;
+      ctx.fillStyle = SURF; ctx.strokeStyle = s[3] === red ? red : LINE; ctx.lineWidth = s[3] === red ? 1.5 : 1;
+      rr(bx, y, bw, bh * 0.18, 4); ctx.fill(); ctx.stroke();
+      dot(bx + 14, y + bh * 0.09, 4.5, s[3]);
+      T(s[0], bx + 28, y + bh * 0.075, Math.round(w * 0.019), INK3);
+      T(s[1], bx + 28, y + bh * 0.135, Math.round(w * 0.022), INK, "left", 500);
+      T(s[2], bx + bw - 12, y + bh * 0.105, Math.round(w * 0.021), s[3], "right", 600);
+      ctx.globalAlpha = 1;
+    });
+    if (lo > 1.4) {
+      T("Half-open interval check [start, end) invariant active", bx, by + bh * 0.94, Math.round(w * 0.021), INK3);
+    }
+
+  } else {
+    /* Assignment grading queue & auto-penalties */
+    T("Grading Queue & Late Penalties", bx, by + h * 0.045, Math.round(w * 0.026), INK, "left", 600);
+    const queue = [
+      ["Tanvir Ahmed", "Lab Assignment 3.pdf", "100 / 100", green, "On time"],
+      ["Pritam Biswas", "Final Project Code.zip", "98 / 100", green, "On time"],
+      ["Nafis Rayan", "Report Draft.docx", "85 / 100", amber, "-5% late penalty"],
+    ];
+    queue.forEach((q, i) => {
+      const p = easeIO(clamp((lo - 0.2 - i * 0.22) / 0.4, 0, 1));
+      if (p <= 0) return;
+      const y = by + bh * 0.12 + i * bh * 0.22;
+      ctx.globalAlpha = p;
+      ctx.fillStyle = SURF; ctx.strokeStyle = LINE; rr(bx, y, bw, bh * 0.17, 4); ctx.fill(); ctx.stroke();
+      T(q[0], bx + 12, y + bh * 0.07, Math.round(w * 0.022), INK, "left", 600);
+      T(q[1], bx + 12, y + bh * 0.13, Math.round(w * 0.019), INK3);
+      T(q[2], bx + bw - 12, y + bh * 0.07, Math.round(w * 0.023), q[3], "right", 600);
+      T(q[4], bx + bw - 12, y + bh * 0.13, Math.round(w * 0.018), q[3], "right");
+      ctx.globalAlpha = 1;
+    });
+    if (lo > 1.3) {
+      ctx.fillStyle = "rgba(31,157,87,.1)"; ctx.strokeStyle = green;
+      rr(bx, by + bh * 0.82, bw, bh * 0.14, 4); ctx.fill(); ctx.stroke();
+      dot(bx + 16, by + bh * 0.89, 4, green);
+      T("Redis queue worker: 24 grades dispatched to students", bx + 28, by + bh * 0.91, Math.round(w * 0.021), green);
+    }
+  }
+
+  ctx.restore();
+};
+
+/* ============================================================
    BHASHABOT — multilingual Messenger auto-reply.
    0 message arrives  1 one GPT-4o call  2 decision point  3 reply sent
 ============================================================ */

@@ -13,7 +13,9 @@ const langColor = (l) => LANG_COLORS[l] || "var(--accent)";
 
 /* curated pinned repositories — the work I want front-and-centre */
 const PINNED = [
-  { name: "BhoomiSheba", lang: "TypeScript", featured: true,
+  { name: "EduSync", lang: "TypeScript", featured: true,
+    desc: "Distributed campus collaboration platform: 4 role-scoped portals, real-time Socket.IO messaging over Redis Pub/Sub, and academic lifecycle management." },
+  { name: "BhoomiSheba", lang: "TypeScript",
     desc: "Next-gen Bangladesh land automation platform: PostGIS spatial GIS, e-mutation tracking, multi-source cross-audits & instant QR e-Dakhila." },
   { name: "OpenGovtBD", lang: "Java",
     desc: "Java 17 + Spring Boot 3 government-citizen platform: role-based Citizen/Officer/Admin workspaces, complaint lifecycle, public discussions, polls & analytics." },

@@ -457,16 +457,6 @@ function ShowreelBand() {
   const containerRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState("00:00");
-  const [duration, setDuration] = useState("00:00");
-
-  const formatTime = (secs) => {
-    if (!secs || isNaN(secs)) return "00:00";
-    const m = Math.floor(secs / 60);
-    const s = Math.floor(secs % 60);
-    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  };
 
   const toggleSound = (e) => {
     if (e && e.stopPropagation) e.stopPropagation();
@@ -493,39 +483,6 @@ function ShowreelBand() {
     }
   };
 
-  const handleTimeUpdate = () => {
-    const vid = videoRef.current;
-    if (!vid || !vid.duration) return;
-    const pct = (vid.currentTime / vid.duration) * 100;
-    setProgress(pct);
-    setCurrentTime(formatTime(vid.currentTime));
-  };
-
-  const handleLoadedMetadata = () => {
-    const vid = videoRef.current;
-    if (vid && vid.duration) {
-      setDuration(formatTime(vid.duration));
-    }
-  };
-
-  const handleScrub = (e) => {
-    const vid = videoRef.current;
-    if (!vid || !vid.duration) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    vid.currentTime = pos * vid.duration;
-  };
-
-  const toggleFullscreen = () => {
-    const elem = containerRef.current;
-    if (!elem) return;
-    if (!document.fullscreenElement) {
-      elem.requestFullscreen().catch(() => {});
-    } else {
-      document.exitFullscreen().catch(() => {});
-    }
-  };
-
   return (
     <section id="reel" className="reel-band section pad">
       <div className="wrap">
@@ -543,23 +500,7 @@ function ShowreelBand() {
                 onClick={toggleSound}
                 title={isMuted ? "Turn sound ON" : "Turn sound OFF"}
               >
-                <span>{!isMuted ? "🔊 Sound ON" : "🔇 Sound OFF"}</span>
-              </button>
-              <button
-                type="button"
-                className="reel-play-btn"
-                onClick={togglePlay}
-                title={isPlaying ? "Pause video" : "Play video"}
-              >
-                {isPlaying ? "❚❚ Pause" : "▶ Play"}
-              </button>
-              <button
-                type="button"
-                className="reel-play-btn"
-                onClick={toggleFullscreen}
-                title="Toggle fullscreen"
-              >
-                ⛶ Fullscreen
+                <span>{!isMuted ? "Sound ON" : "Sound OFF"}</span>
               </button>
               <a className="reel-full" href="Showreel.html" target="_blank" rel="noopener" style={{ marginLeft: 0 }}>
                 page ↗
@@ -574,8 +515,6 @@ function ShowreelBand() {
               loop
               muted={isMuted}
               playsInline
-              onTimeUpdate={handleTimeUpdate}
-              onLoadedMetadata={handleLoadedMetadata}
               onEnded={() => {
                 const vid = videoRef.current;
                 if (vid) {
@@ -586,36 +525,6 @@ function ShowreelBand() {
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
             />
-            <button
-              type="button"
-              className={"reel-float-sound " + (isMuted ? "muted" : "unmuted")}
-              onClick={toggleSound}
-              title={isMuted ? "Click to unmute" : "Click to mute"}
-            >
-              <span>{isMuted ? "🔇 SOUND OFF · Click for audio" : "🔊 SOUND ON"}</span>
-            </button>
-            <div className="reel-scrub-wrap" onClick={(e) => e.stopPropagation()}>
-              <button
-                type="button"
-                className="reel-play-btn"
-                style={{ padding: "3px 8px", fontSize: 11 }}
-                onClick={togglePlay}
-              >
-                {isPlaying ? "❚❚" : "▶"}
-              </button>
-              <div className="reel-scrub-bar" onClick={handleScrub}>
-                <div className="reel-scrub-fill" style={{ width: `${progress}%` }}></div>
-              </div>
-              <span className="reel-time-badge">{currentTime} / {duration}</span>
-              <button
-                type="button"
-                className={"reel-sound-btn" + (!isMuted ? " active" : "")}
-                style={{ padding: "3px 9px", fontSize: 11 }}
-                onClick={toggleSound}
-              >
-                {!isMuted ? "🔊 ON" : "🔇 OFF"}
-              </button>
-            </div>
           </div>
         </div>
       </div>

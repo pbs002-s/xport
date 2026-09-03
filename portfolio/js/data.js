@@ -19,13 +19,13 @@ window.DATA = {
     phone: "",
     site: "https://pritam-biswas-portfolio.netlify.app",
     summary:
-      "Second-year CSE undergraduate (B.Tech, expected graduation 2028) at Daffodil International University who has shipped multiple production-grade, AI-integrated products — a multilingual GPT-4o support agent live across 18 languages, a full-stack finance platform with embedded AI assistance, a native Android app that reads scanned class routines with Gemini Vision, and a government-recognized civic engagement platform. Every project was built solo, end-to-end — architecture, Git-based version control, debugging, and interface. Actively competing on LeetCode and Codeforces, three-time institutional science fair winner.",
+      "Second-year CSE undergraduate (B.Tech, expected graduation 2028) at Daffodil International University who has shipped multiple production-grade, AI-integrated and distributed products — EduSync (a multi-tenant digital campus collaboration platform), BhashaBot (a multilingual GPT-4o support agent live across 18 languages), OpenGovtBD (a civic engagement platform), medicalLLM (an EMG ALS screening platform), and DIU Routine (a native Android app with Gemini Vision). Every project was built solo, end-to-end — architecture, Git-based version control, debugging, and interface.",
   },
 
   // KPI / status widgets for the hero console
   stats: [
     { label: "contributions", value: "350+", sub: "past year" },
-    { label: "repositories", value: "12", sub: "public" },
+    { label: "repositories", value: "13", sub: "public & private" },
     { label: "problems", value: "100+", sub: "LeetCode & CP" },
     { label: "stack", value: "full", sub: "web · mobile · ai" },
   ],
@@ -34,12 +34,12 @@ window.DATA = {
     {
       cat: "Core Languages & Tech",
       cmd: "stack --core",
-      items: ["Python", "JavaScript", "TypeScript", "Java", "React", "Node.js", "Express"],
+      items: ["Python", "JavaScript", "TypeScript", "Java", "PHP", "React", "Node.js", "Express"],
     },
     {
       cat: "Frameworks & Mobile",
       cmd: "stack --mobile",
-      items: ["Kotlin", "Jetpack Compose", "Android", "Java 17", "Spring Boot", "Thymeleaf", "Maven", "Tailwind CSS", "HTML/CSS", "C"],
+      items: ["Kotlin", "Jetpack Compose", "Android", "Java 17", "Spring Boot", "Laravel", "Thymeleaf", "Maven", "Tailwind CSS", "HTML/CSS", "C"],
     },
     {
       cat: "AI & Automation",
@@ -49,11 +49,27 @@ window.DATA = {
     {
       cat: "Engineering & Tools",
       cmd: "stack --tools",
-      items: ["Git / GitHub", "CRUD Architecture", "Role-Based Access", "REST APIs", "Room DB", "PostGIS", "Chart.js", "MySQL", "Linux", "VS Code", "Android Studio"],
+      items: ["Git / GitHub", "Docker", "Socket.IO", "Redis", "PostgreSQL", "CRUD Architecture", "Role-Based Access", "REST APIs", "Room DB", "PostGIS", "Chart.js", "MySQL", "Linux"],
     },
   ],
 
   projects: [
+    {
+      name: "EduSync",
+      tag: "Campus Collaboration & Digital University Platform",
+      status: "LIVE",
+      period: "2026",
+      url: "https://github.com/pbs002-s/EduSync",
+      role: "Full-Stack Architect",
+      blurb:
+        "A multi-tenant digital campus collaboration platform unifying 4 role-scoped portals (Student, Teacher, Super Admin, and Campus Authority) with real-time Socket.IO messaging over Redis Pub/Sub, academic lifecycle management, routine conflict detection, and background queue workers.",
+      highlights: [
+        "4 role-scoped portals over a unified React 19 shell: Student, Teacher, Super Admin & Authority",
+        "Real-time 1-on-1 & study group push messaging powered by Node.js, Socket.IO and Redis Pub/Sub",
+        "Academic lifecycle engine with automated routine conflict detection, course enrollment & submission grading queues",
+      ],
+      stack: ["React 19", "TypeScript", "Laravel 13", "Node.js", "Socket.IO", "PostgreSQL", "Redis", "Docker"],
+    },
     {
       name: "BhashaBot",
       tag: "AI Multilingual Messenger Auto-Reply",
@@ -140,6 +156,13 @@ window.DATA = {
   // open-source / personal builds (github.com/pbs002-s) — shown in Work + skill graph
   ghProjects: [
     {
+      name: "EduSync", short: "EduSync", gh: "EduSync", status: "OPEN SOURCE", lang: "TypeScript",
+      tag: "Digital University Platform", role: "Architect & Creator", period: "Open source · React 19 / Laravel / Socket.IO", reel: "edusync",
+      blurb: "Multi-tenant digital university platform: 4 role-scoped portals, real-time Socket.IO messaging over Redis Pub/Sub, PostgreSQL full-text search & Docker orchestration.",
+      highlights: ["4 role-scoped portals over 1 unified shell", "Socket.IO + Redis Pub/Sub realtime messaging", "Academic routine conflict detection & grading queues"],
+      stack: ["React 19", "TypeScript", "Laravel 13", "Node.js", "Socket.IO", "PostgreSQL", "Redis", "Docker"],
+    },
+    {
       name: "BhashaBot", short: "BhashaBot", gh: "BhashaBot", status: "OPEN SOURCE", lang: "TypeScript",
       tag: "Multilingual AI Messenger Agent", role: "Creator", period: "Open source · TypeScript", reel: "bhashabot",
       blurb: "Automated Facebook Messenger support detecting 18 languages with GPT-4o, intent classification, and human handoff routing.",
@@ -182,7 +205,7 @@ window.DATA = {
       org: "Independent & Open Source Products",
       period: "2024 — Present",
       place: "Dhaka, Bangladesh",
-      desc: "Architected and shipped four production-grade, AI-integrated software products solo end-to-end: BhashaBot (multilingual AI customer agent), Takar Hisab (AI student finance tracker), DIU Routine (Gemini Vision Android scheduler), and Nagorik Setu (government-citizen engagement).",
+      desc: "Architected and shipped production-grade distributed and AI-integrated software products solo end-to-end: EduSync (digital university collaboration platform), BhashaBot (multilingual AI customer agent), OpenGovtBD (Spring Boot civic engagement platform), and DIU Routine (Gemini Vision Android scheduler).",
     },
     {
       role: "Competitive Programmer",
