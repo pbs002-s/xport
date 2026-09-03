@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pritam Biswas — Motion Reel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/v3-base.css" />
+  <style>
+    html, body { height: 100%; overflow: hidden; background: #080806; color: #f4f1ea; font-family: var(--font-sans); }
+    #reel-root { position: fixed; inset: 0; display: grid; place-items: center; padding: clamp(56px, 8vh, 76px) 24px clamp(20px, 4vh, 36px); }
+
+    .rl {
+      width: min(1200px, 94vw); height: 100%; display: grid; gap: clamp(12px, 1.8vh, 20px);
+      grid-template-rows: auto minmax(0, 1fr) auto; align-content: stretch;
+    }
+    .rl-top {
+      display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+      font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--ink-3);
+    }
+    .rl-top .no { color: var(--accent); font-weight: 600; }
+    .rl-top .ln { flex: 1; height: 1px; background: rgba(255,255,255,.12); min-width: 24px; }
+
+    .rl-stage {
+      position: relative; min-height: 0; height: 100%; width: 100%;
+      aspect-ratio: 16 / 9; overflow: hidden; justify-self: center;
+      border: 1px solid rgba(255,255,255,.15); border-radius: var(--radius); background: #000;
+      box-shadow: 0 20px 60px rgba(0,0,0,.8);
+    }
+    .rl-stage video {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+      cursor: pointer;
+    }
+
+    .rl-meta { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .rl-meta h1 {
+      font-family: var(--font-display); font-weight: 600; letter-spacing: -.03em;
+      font-size: clamp(22px, 2.8vw, 36px); line-height: 1.1; margin: 0;
+    }
+    .rl-meta p {
+      color: #9a9284; font-size: 13px; line-height: 1.5; margin-top: 4px;
+    }
+
+    .rl-ctl { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 12px; }
+    .rl-ctl button {
+      appearance: none; cursor: pointer; background: rgba(255,255,255,.08); color: #f4f1ea;
+      border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 7px 16px;
+      font: inherit; display: inline-flex; align-items: center; gap: 8px;
+      transition: all .2s var(--ease-out);
+    }
+    .rl-ctl button:hover { color: #fff; border-color: var(--accent); background: rgba(43,80,226,.25); }
+    .rl-ctl button.active {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+      box-shadow: 0 0 16px rgba(43,80,226,.5);
+    }
+
+    .reel-back {
+      position: fixed; left: 24px; top: 20px; z-index: 100;
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em;
+      color: #e5e0d4; border: 1px solid rgba(255,255,255,.25);
+      padding: 8px 16px; border-radius: 999px; background: rgba(18,18,20,.8);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      transition: all .2s;
+    }
+    .reel-back:hover { border-color: var(--accent); color: var(--accent); background: rgba(43,80,226,.15); }
+
+    .reel-floating-unmute {
+      position: absolute; top: 20px; right: 20px; z-index: 20;
+      background: rgba(12,11,8,.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.25); border-radius: 999px;
+      padding: 10px 20px; color: #f4f1ea; font-family: var(--font-mono);
+      font-size: 12px; letter-spacing: .08em; display: inline-flex; align-items: center;
+      gap: 10px; cursor: pointer; transition: all .22s var(--ease-out);
+      box-shadow: 0 8px 24px rgba(0,0,0,.6);
+    }
+    .reel-floating-unmute:hover { transform: scale(1.04); border-color: var(--accent); color: #fff; }
+    .reel-floating-unmute.muted { background: rgba(22,20,18,.9); border-color: rgba(255,255,255,.35); }
+    .reel-floating-unmute.unmuted { background: rgba(43,80,226,.5); border-color: var(--accent); color: #fff; }
+
+    .rl-scrub {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 24px 20px 14px;
+      background: linear-gradient(0deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.4) 60%, transparent 100%);
+      display: flex; align-items: center; gap: 16px; z-index: 15;
+    }
+    .rl-scrub-bar {
+      flex: 1; height: 6px; background: rgba(255,255,255,.25); border-radius: 999px;
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .rl-scrub-bar:hover { height: 8px; }
+    .rl-scrub-fill { height: 100%; background: var(--accent); border-radius: 999px; width: 0%; }
+    .rl-time { font-family: var(--font-mono); font-size: 11.5px; color: #a8a193; flex: none; }
+  </style>
+</head>
+<body>
+  <a class="reel-back" href="index.html#reel">← Back to portfolio</a>
+  <div id="reel-root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script type="text/babel">
+    function FullShowreel() {
+      const vidRef = React.useRef(null);
+      const stageRef = React.useRef(null);
+      const [isMuted, setIsMuted] = React.useState(true);
+      const [isPlaying, setIsPlaying] = React.useState(true);
+      const [progress, setProgress] = React.useState(0);
+      const [time, setTime] = React.useState("00:00");
+      const [duration, setDuration] = React.useState("00:00");
+
+      const fmt = (s) => {
+        if (!s || isNaN(s)) return "00:00";
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+      };
+
+      const toggleSound = (e) => {
+        if (e && e.stopPropagation) e.stopPropagation();
+        const v = vidRef.current;
+        if (!v) return;
+        const next = !v.muted;
+        v.muted = next;
+        setIsMuted(next);
+        if (!next) {
+          v.play().catch(() => {});
+          setIsPlaying(true);
+        }
+      };
+
+      const togglePlay = () => {
+        const v = vidRef.current;
+        if (!v) return;
+        if (v.paused) {
+          v.play().catch(() => {});
+          setIsPlaying(true);
+        } else {
+          v.pause();
+          setIsPlaying(false);
+        }
+      };
+
+      const handleScrub = (e) => {
+        const v = vidRef.current;
+        if (!v || !v.duration) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        v.currentTime = ratio * v.duration;
+      };
+
+      const toggleFS = () => {
+        const elem = stageRef.current;
+        if (!elem) return;
+        if (!document.fullscreenElement) {
+          elem.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      };
+
+      // Keyboard shortcuts: Space (play/pause), M (sound on/off), F (fullscreen)
+      React.useEffect(() => {
+        const onKey = (e) => {
+          if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+          if (e.code === "Space") { e.preventDefault(); togglePlay(); }
+          if (e.code === "KeyM") { e.preventDefault(); toggleSound(); }
+          if (e.code === "KeyF") { e.preventDefault(); toggleFS(); }
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+      }, []);
+
+      return (
+        <div className="rl">
+          <div className="rl-top">
+            <span className="no">06</span>
+            <span>/ motion reel — pritam biswas</span>
+            <span className="ln"></span>
+            <span>sound {!isMuted ? "on (active)" : "off (muted)"}</span>
+          </div>
+
+          <div className="rl-stage" ref={stageRef} onClick={togglePlay}>
+            <video
+              ref={vidRef}
+              src="videos/motion-reel.mp4"
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              onTimeUpdate={() => {
+                const v = vidRef.current;
+                if (!v || !v.duration) return;
+                setProgress((v.currentTime / v.duration) * 100);
+                setTime(fmt(v.currentTime));
+              }}
+              onLoadedMetadata={() => {
+                const v = vidRef.current;
+                if (v && v.duration) setDuration(fmt(v.duration));
+              }}
+              onEnded={() => {
+                const v = vidRef.current;
+                if (v) {
+                  v.currentTime = 0;
+                  v.play().catch(() => {});
+                }
+              }}
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+            />
+
+            <button
+              type="button"
+              className={"reel-floating-unmute " + (isMuted ? "muted" : "unmuted")}
+              onClick={toggleSound}
+            >
+              <span>{isMuted ? "🔇 SOUND OFF · Click for audio" : "🔊 SOUND ON"}</span>
+            </button>
+
+            <div className="rl-scrub" onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className="rl-ctl"
+                style={{ background: "transparent", border: "1px solid rgba(255,255,255,.2)", borderRadius: 999, color: "#fff", padding: "5px 12px", cursor: "pointer" }}
+                onClick={togglePlay}
+              >
+                {isPlaying ? "❚❚ Pause" : "▶ Play"}
+              </button>
+              <div className="rl-scrub-bar" onClick={handleScrub}>
+                <div className="rl-scrub-fill" style={{ width: `${progress}%` }}></div>
+              </div>
+              <span className="rl-time">{time} / {duration}</span>
+              <button
+                type="button"
+                style={{ background: !isMuted ? "var(--accent)" : "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.25)", borderRadius: 999, color: "#fff", padding: "5px 14px", font: "inherit", cursor: "pointer" }}
+                onClick={toggleSound}
+              >
+                {!isMuted ? "🔊 Sound ON" : "🔇 Sound OFF"}
+              </button>
+            </div>
+          </div>
+
+          <div className="rl-meta">
+            <div>
+              <h1>Pritam Biswas — Work in Motion</h1>
+              <p>Cinematic walkthrough of software systems, AI pipelines, and responsive mobile/web applications.</p>
+            </div>
+            <div className="rl-ctl">
+              <button
+                type="button"
+                className={!isMuted ? "active" : ""}
+                onClick={toggleSound}
+              >
+                {!isMuted ? "🔊 Sound ON" : "🔇 Sound OFF"}
+              </button>
+              <button type="button" onClick={togglePlay}>
+                {isPlaying ? "❚❚ Pause" : "▶ Play"}
+              </button>
+              <button type="button" onClick={toggleFS}>
+                ⛶ Fullscreen
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("reel-root")).render(<FullShowreel />);
+  </script>
+</body>
+</html>

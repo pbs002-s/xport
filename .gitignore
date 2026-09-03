@@ -1,0 +1,20 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# agent tooling, not part of the site
+.agents/
+.claude/
+skills-lock.json
+
+# byte-identical duplicates of portfolio/videos/motion-reel.mp4
+/videos/
+portfolio/videos/Video Project 6.mp4
+
+# duplicate of portfolio/Pritam_Biswas_CV.pdf
+/Pritam_Biswas_CV.pdf
+
+# scratch output from fetch_github.js
+repos_data.json
+repos_report.md

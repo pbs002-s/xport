@@ -1,0 +1,145 @@
+/* ============================================================
+   v3 POLISH — micro-interactions.
+   Rules of this file:
+     1. Per-frame animation touches transform / opacity ONLY.
+        Shadows are painted once on a ::after and cross-faded by opacity,
+        never animated as box-shadow (that repaints a large blurred region
+        every frame).
+     2. Feedback lives in the 100-250ms band; enter ease-out, exit ease-in.
+     3. Nothing here fights the reduced-motion tiers in v3-base.css.
+============================================================ */
+
+/* interactive primitives — colour/border are cheap, transform is composited */
+a, button, .chip, .soc, .icard, .mon-card, .pchip, .stat, .spec .row,
+.rail a, .nav-links a, .cmdk-item, .ibtn, .wv, .proj-open, .open, .wi-open {
+  transition:
+    color var(--dur-micro) var(--ease),
+    background-color var(--dur-micro) var(--ease),
+    border-color var(--dur-micro) var(--ease),
+    opacity var(--dur-micro) var(--ease),
+    transform var(--dur-ui) var(--ease-out);
+}
+
+/* ---------- shared hover-shadow layer (opacity cross-fade) ---------- */
+.profile-stage, .profile-cell, .profile-bio-card, .stats-profile .st,
+.mon-card, .cv-preview-card, .gh-pin, .gh-featured, .reel-frame {
+  position: relative;
+}
+.profile-stage::after, .profile-cell::after, .profile-bio-card::after,
+.mon-card::after, .cv-preview-card::after, .gh-pin::after, .gh-featured::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transition: opacity var(--dur-ui) var(--ease);
+  pointer-events: none;
+}
+.profile-stage:hover::after, .profile-cell:hover::after, .profile-bio-card:hover::after,
+.mon-card:hover::after, .cv-preview-card:hover::after, .gh-pin:hover::after,
+.gh-featured:hover::after { opacity: 1; }
+
+.profile-stage, .profile-cell, .profile-bio-card, .stats-profile .st,
+.mon-card, .cv-preview-card, .gh-pin, .gh-featured {
+  transition: border-color var(--dur-micro) var(--ease),
+              background-color var(--dur-micro) var(--ease),
+              transform var(--dur-ui) var(--ease-out);
+}
+.profile-stage:hover, .profile-cell:hover, .profile-bio-card:hover,
+.mon-card:hover, .cv-preview-card:hover, .gh-pin:hover, .gh-featured:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-2);
+}
+.stats-profile .st:hover { background: var(--paper); }
+
+/* keyboard accessibility — always on, never gated by motion prefs */
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- nav ---------- */
+.nav-links a:hover { color: var(--accent); }
+.brand .sq { transition: transform var(--dur-ui) var(--ease-out); }
+.brand:hover .sq { transform: rotate(45deg); }
+.ibtn:active { transform: scale(.94); }
+
+/* ---------- rail ---------- */
+.rail a .dot { transition: transform var(--dur-micro) var(--ease-out), background-color var(--dur-micro), border-color var(--dur-micro); }
+.rail a:hover .dot { transform: scale(1.45); }
+
+/* ---------- chips ---------- */
+.chip:hover { transform: translateY(-2px); }
+
+/* ---------- buttons ---------- */
+.btn svg { transition: transform var(--dur-micro) var(--ease-out); }
+.btn:hover svg { transform: translate(3px,-3px); }
+
+/* ---------- stat cells / spec rows ---------- */
+.stat:hover { background: var(--paper-2); }
+.stat .v { transition: color var(--dur-micro) var(--ease); }
+.stat:hover .v { color: var(--accent); }
+.spec .row { transition: transform var(--dur-micro) var(--ease-out); }
+.spec .row:hover { transform: translateX(6px); }
+.spec .row .k { transition: color var(--dur-micro) var(--ease); }
+.spec .row:hover .k { color: var(--accent); }
+
+/* ---------- portrait ---------- */
+.portrait .pchip { transition: border-color var(--dur-micro) var(--ease); }
+.portrait:hover .pchip { border-color: var(--accent); }
+.portrait .backplate, .portrait .halo, .portrait img {
+  transition: transform var(--dur-slow) var(--ease-out), opacity var(--dur-ui) var(--ease);
+}
+.portrait:hover .backplate { transform: translate(5px, -5px); }
+.portrait:hover .halo.h1 { transform: scale(1.06); }
+.portrait:hover img { transform: scale(1.04); }
+
+/* ---------- project visuals ---------- */
+.wv .browser { transition: transform var(--dur-slow) var(--ease-out); }
+.wv:hover .browser { transform: scale(1.012); }
+.proj-open svg, .open svg, .wi-open svg { transition: transform var(--dur-micro) var(--ease-out); }
+.wi .open:hover svg, .proj-open:hover svg { transform: translate(4px,-4px); }
+
+/* ---------- credential cards ---------- */
+.icard::after {
+  content: "→";
+  position: absolute; right: 0; top: 18px;
+  font-family: var(--font-mono); color: var(--accent);
+  opacity: 0; transform: translateX(-6px);
+  transition: opacity var(--dur-micro) var(--ease), transform var(--dur-micro) var(--ease-out);
+}
+.icard:hover::after { opacity: 1; transform: translateX(0); }
+.icard h4 { transition: color var(--dur-micro) var(--ease); }
+.icard:hover h4 { color: var(--accent); }
+
+/* ---------- cv ---------- */
+.cv-meta span { transition: border-color var(--dur-micro) var(--ease), transform var(--dur-micro) var(--ease-out); }
+.cv-meta span:hover { transform: translateY(-2px); border-color: var(--line-2); }
+.cv-inline-link svg { transition: transform var(--dur-micro) var(--ease-out); }
+.cv-inline-link:hover svg { transform: translate(4px,-4px); }
+
+/* ---------- socials ---------- */
+.soc svg { transition: transform var(--dur-ui) var(--ease-out); }
+.soc:hover svg { transform: scale(1.1); }
+
+/* ---------- command palette ---------- */
+.cmdk-item { transition: background-color var(--dur-micro) var(--ease), transform var(--dur-micro) var(--ease-out); }
+.cmdk-item:hover { transform: translateX(3px); }
+
+/* ---------- contact ---------- */
+.contact .em a { position: relative; }
+.contact .em a::after {
+  content: ""; position: absolute; left: 0; bottom: -3px; height: 1px; width: 100%;
+  background: var(--accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-ui) var(--ease-out);
+}
+.contact .em a:hover::after { transform: scaleX(1); }
+
+/* ---------- terminal / graph ---------- */
+.term-out a { transition: opacity var(--dur-micro) var(--ease); }
+.term-out a:hover { opacity: .7; }
+.net-detail ul li a .ar { transition: transform var(--dur-micro) var(--ease-out); }
+.net-detail ul li a:hover .ar { transform: translate(3px,-3px); }

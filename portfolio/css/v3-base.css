@@ -1,0 +1,188 @@
+/* ============================================================
+   THE SPEC — Pritam Biswas  ·  v3
+   Editorial engineering portfolio. Light default + dark.
+============================================================ */
+
+/* ---------- design tokens ---------- */
+:root {
+  --accent: #1f6feb;            /* default — user-switchable */
+  --accent-soft: rgba(31,111,235,.10);
+
+  --font-display: "Inter Tight", "Inter", system-ui, -apple-system, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* motion — one scale, so reduced-motion can retune the whole site */
+  --ease: cubic-bezier(.4,0,.2,1);
+  --ease-out: cubic-bezier(.16,1,.3,1);
+  --dur-micro: 160ms;           /* hover / press feedback */
+  --dur-ui: 220ms;              /* enter / exit */
+  --dur-slow: 420ms;            /* large surfaces */
+
+  --maxw: 1280px;
+  --gutter: clamp(20px, 5vw, 72px);
+  --radius: 10px;
+}
+
+/* LIGHT (default) — neutral paper */
+html, html[data-theme="light"] {
+  --paper: #fbfbfa;
+  --paper-2: #f2f2f0;
+  --surface: #ffffff;
+  --ink: #111113;
+  --ink-2: #56565c;
+  --ink-3: #86868d;
+  --line: rgba(17,17,19,.10);
+  --line-2: rgba(17,17,19,.20);
+  --shadow: 0 24px 60px -32px rgba(17,17,19,.28);
+  --grain-op: .028;
+  color-scheme: light;
+}
+
+/* DARK — neutral near-black */
+html[data-theme="dark"] {
+  --paper: #0b0b0c;
+  --paper-2: #121214;
+  --surface: #161618;
+  --ink: #f4f4f3;
+  --ink-2: #a3a3aa;
+  --ink-3: #74747c;
+  --line: rgba(244,244,243,.11);
+  --line-2: rgba(244,244,243,.20);
+  --shadow: 0 32px 80px -40px #000;
+  --grain-op: .04;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.55;
+  letter-spacing: -.006em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  transition: background var(--dur-slow) var(--ease), color var(--dur-slow) var(--ease);
+}
+body.loading { overflow: hidden; height: 100svh; }
+html { overflow-x: clip; }
+
+::selection { background: var(--accent); color: #fff; }
+a { color: inherit; text-decoration: none; }
+::-webkit-scrollbar { width: 0; height: 0; }
+img { display: block; max-width: 100%; }
+
+.mono { font-family: var(--font-mono); }
+.accent { color: var(--accent); }
+.serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+
+/* grain */
+.aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .85; transition: opacity .6s; }
+html[data-theme="dark"] .aurora { opacity: .6; }
+.grain { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: var(--grain-op);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: var(--grain-blend, multiply); }
+html[data-theme="dark"] .grain { --grain-blend: screen; }
+
+/* ---------- layout ---------- */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); position: relative; z-index: 2; }
+.section { position: relative; z-index: 2; }
+.pad { padding-top: clamp(80px, 11vw, 170px); padding-bottom: clamp(80px, 11vw, 170px); }
+.pad-b { padding-bottom: clamp(80px, 11vw, 170px); }
+
+/* section header: spec-sheet style */
+.shead { display: grid; grid-template-columns: minmax(0,1fr); gap: 4px; margin-bottom: clamp(36px,5vw,70px); }
+.shead .meta { display: flex; align-items: center; gap: 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 22px; }
+.shead .meta .no { color: var(--accent); }
+.shead .meta .ln { flex: 1; height: 1px; background: var(--line); }
+.shead h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(32px, 4.6vw, 62px); line-height: 1.02; letter-spacing: -.035em; }
+.shead .sub { color: var(--ink-2); font-size: clamp(15px,1.6vw,18px); line-height: 1.65; max-width: 54ch; margin-top: 16px; }
+
+/* reveals — handled ENTIRELY by JS inline styles via the rAF loop.
+   CSS transitions & keyframes do NOT progress in this engine, so we never
+   depend on them. Content is visible by default; JS hides-then-tweens it. */
+.mask { overflow: hidden; }
+
+/* hero name letters sit inline; reveal handled by .mask + IO (transitions, not keyframes) */
+.hero-name .ln > span { display: inline-block; }
+
+/* HARD SAFETY NET — the hero (above the fold) can never stay hidden */
+body.force-show #home [data-rv], body.force-show #home .mask > * { opacity: 1 !important; transform: none !important; }
+
+/* buttons — fill wipe is a transform, hover state is opacity/color only */
+.btn { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .01em; padding: 15px 24px;
+  border: 1px solid var(--line-2); background: transparent; color: var(--ink); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 10px; position: relative; overflow: hidden; border-radius: 6px;
+  transition: color var(--dur-micro) var(--ease), border-color var(--dur-micro) var(--ease), transform var(--dur-micro) var(--ease-out); }
+.btn span, .btn svg { position: relative; z-index: 1; }
+.btn::before { content: ""; position: absolute; inset: 0; background: var(--ink); transform: translateY(101%);
+  transition: transform var(--dur-ui) var(--ease-out); }
+.btn:hover { color: var(--paper); border-color: var(--ink); }
+.btn:hover::before { transform: translateY(0); }
+.btn:active { transform: scale(.98); }
+.btn-solid { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-solid::before { background: var(--ink); }
+.btn-solid:hover { color: var(--paper); border-color: var(--ink); }
+
+/* chips */
+.chip { font-family: var(--font-mono); font-size: 12.5px; padding: 7px 13px; border: 1px solid var(--line);
+  color: var(--ink-2); white-space: nowrap; border-radius: 999px;
+  transition: color var(--dur-micro) var(--ease), border-color var(--dur-micro) var(--ease),
+              background-color var(--dur-micro) var(--ease), transform var(--dur-micro) var(--ease-out); }
+.chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+/* live dot */
+.live { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; display: inline-flex; align-items: center; gap: 8px; color: var(--ink-2); }
+.live i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 var(--accent); animation: ping 2.4s infinite; }
+@keyframes ping { 0%{box-shadow:0 0 0 0 var(--accent-soft)} 70%{box-shadow:0 0 0 9px transparent} 100%{box-shadow:0 0 0 0 transparent} }
+
+.caret { display: inline-block; width: .56ch; height: 1.05em; vertical-align: text-bottom; background: var(--accent); animation: blink 1.05s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ============================================================
+   REDUCED MOTION — tiered, not a kill switch.
+   Tier 1 (remove): parallax, 3D tilt, marquee, aurora drift, pinned
+                    horizontal scroll, sticky-stack scale, smooth scroll.
+   Tier 2 (soften): reveal slides become a <=180ms opacity fade.
+   Tier 3 (keep):   color, focus rings, opacity, loading feedback.
+============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-micro: 120ms; --dur-ui: 140ms; --dur-slow: 180ms; }
+
+  /* backstop: 0.01ms (not 0s) so transitionend/animationend still fire */
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Tier 1 — displacement removed outright */
+  .aurora, .grain { display: none !important; }
+  .marquee-track { transform: none !important; }
+  .portrait, .portrait .tilt, .portrait .pchip, .wv .big { transform: none !important; }
+  .work-panel .pcard { transform: none !important; opacity: 1 !important; filter: none !important; }
+  .skills-track { transform: none !important; }
+
+  /* Tier 2 — reveals fade in place, no travel */
+  [data-rv], .mask > * { transform: none !important; }
+
+  /* Tier 3 — kept: colour, borders, focus, opacity */
+  a, button, .chip, .icard, .gh-pin, .profile-cell {
+    transition-property: color, background-color, border-color, opacity !important;
+    transition-duration: var(--dur-micro) !important;
+  }
+}
+
+/* honour the OS setting for the hover-lift layer too */
+@media (prefers-reduced-motion: no-preference) {
+  .lift { transition: transform var(--dur-ui) var(--ease-out); }
+  .lift:hover { transform: translateY(-3px); }
+}
