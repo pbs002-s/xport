@@ -227,6 +227,8 @@ window.DATA = {
     { label: "GitHub", url: "https://github.com/pbs002-s", key: "github" },
     { label: "LeetCode", url: "https://leetcode.com/u/Pritam_002/", key: "leetcode" },
     { label: "Codeforces", url: "https://codeforces.com/profile/Pritam-580", key: "codeforces" },
+    { label: "Facebook", url: "https://www.facebook.com/pbs.020", key: "facebook" },
+    { label: "Instagram", url: "https://www.instagram.com/swagoto_pritom/", key: "instagram" },
     { label: "Portfolio", url: "https://pritam-biswas-portfolio.netlify.app", key: "site" },
     { label: "Email", url: "mailto:pritam020s2@gmail.com", key: "email" },
   ],

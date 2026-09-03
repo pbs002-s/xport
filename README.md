@@ -34,4 +34,4 @@ server.js            static file server
 
 ## Links
 
-[GitHub](https://github.com/pbs002-s) · [LeetCode](https://leetcode.com/u/Pritam_002/) · [Codeforces](https://codeforces.com/profile/Pritam-580) · [pritam020s2@gmail.com](mailto:pritam020s2@gmail.com)
+[GitHub](https://github.com/pbs002-s) · [LeetCode](https://leetcode.com/u/Pritam_002/) · [Codeforces](https://codeforces.com/profile/Pritam-580) · [Facebook](https://www.facebook.com/pbs.020) · [Instagram](https://www.instagram.com/swagoto_pritom/) · [pritam020s2@gmail.com](mailto:pritam020s2@gmail.com)

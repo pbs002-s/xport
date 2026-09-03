@@ -22,6 +22,8 @@ function CmdKV3({ open, setOpen, toggleTheme }) {
       { id: "email", label: "Copy email", ic: "@", desc: "action", act: () => navigator.clipboard && navigator.clipboard.writeText(D.identity.email) },
       { id: "gh-open", label: "Open GitHub", ic: "↗", desc: "link", act: () => window.open(D.socials.find(s=>s.key==="github").url, "_blank") },
       { id: "leetcode", label: "Open LeetCode", ic: "↗", desc: "link", act: () => window.open(D.socials.find(s=>s.key==="leetcode").url, "_blank") },
+      { id: "facebook", label: "Open Facebook", ic: "↗", desc: "link", act: () => window.open(D.socials.find(s=>s.key==="facebook").url, "_blank") },
+      { id: "instagram", label: "Open Instagram", ic: "↗", desc: "link", act: () => window.open(D.socials.find(s=>s.key==="instagram").url, "_blank") },
   ];
   const filtered = items.filter((it) => it.label.toLowerCase().includes(q.toLowerCase()) || it.id.includes(q.toLowerCase()));
   useEffect(() => { if (open) { setQ(""); setActive(0); setTimeout(() => inputRef.current && inputRef.current.focus(), 30); } }, [open]);

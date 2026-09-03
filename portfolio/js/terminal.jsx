@@ -28,7 +28,7 @@ function Terminal({ onCommand }) {
       { t: "out", html: "  <span class='term-key'>projects</span>  featured work + links" },
       { t: "out", html: "  <span class='term-key'>experience</span> work history" },
       { t: "out", html: "  <span class='term-key'>contact</span>   how to reach me" },
-      { t: "out", html: "  <span class='term-key'>social</span>    github / leetcode / codeforces" },
+      { t: "out", html: "  <span class='term-key'>social</span>    github / leetcode / codeforces / facebook / instagram" },
       { t: "out", html: "  <span class='term-key'>neofetch</span>  system summary" },
       { t: "out", html: "  <span class='term-key'>theme</span>     toggle dark / light" },
       { t: "out", html: "  <span class='term-key'>goto</span> &lt;section&gt;  scroll to a section" },
