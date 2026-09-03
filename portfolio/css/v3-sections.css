@@ -809,7 +809,7 @@
   height: 100%;
   border: 0;
   background: #fff;
-  opacity: 0;
+  opacity: 1;
   transition: opacity .35s var(--ease);
 }
 .cv-preview.ready iframe { opacity: 1; }

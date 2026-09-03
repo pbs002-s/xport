@@ -6,9 +6,16 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options = "DENY"
+    X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/Pritam_Biswas_CV.pdf"
+  [headers.values]
+    Content-Type = "application/pdf"
+    Content-Disposition = "inline; filename=\"Pritam_Biswas_CV.pdf\""
+    X-Frame-Options = "SAMEORIGIN"
 
 [[headers]]
   for = "/videos/*"

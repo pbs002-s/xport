@@ -337,46 +337,25 @@ function CredentialsV3() {
 function CvV3() {
   const D = window.DATA;
   const cv = D.cv || {};
-  const file = cv.file || "/Pritam_Biswas_CV.pdf";
+  const file = cv.file || "Pritam_Biswas_CV.pdf";
   const previewSrc = `${file}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`;
-  const [checking, setChecking] = useState(true);
-  const [previewReady, setPreviewReady] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [previewReady, setPreviewReady] = useState(true);
   const [previewFailed, setPreviewFailed] = useState(false);
 
   useEffect(() => {
     let active = true;
-    setChecking(true);
-    setPreviewReady(false);
-    setPreviewFailed(false);
-
     fetch(file, { method: "HEAD" })
       .then((res) => {
         if (!active) return;
         if (!res.ok) {
           setPreviewFailed(true);
-          setChecking(false);
         }
       })
-      .catch(() => {
-        if (!active) return;
-        setPreviewFailed(true);
-        setChecking(false);
-      });
-
-    /* Browsers with no inline PDF viewer (most mobile ones) fire neither `load`
-       nor `error` on the iframe, which left the card stuck on "Preparing
-       profile view…" forever. Fall back to the profile card instead. */
-    const giveUp = setTimeout(() => {
-      if (!active) return;
-      setPreviewReady((ready) => {
-        if (!ready) { setPreviewFailed(true); setChecking(false); }
-        return ready;
-      });
-    }, 5000);
+      .catch(() => {});
 
     return () => {
       active = false;
-      clearTimeout(giveUp);
     };
   }, [file]);
 
@@ -414,7 +393,6 @@ function CvV3() {
               <iframe
                 src={previewSrc}
                 title="Pritom Biswas CV preview"
-                loading="lazy"
                 onLoad={() => {
                   setPreviewReady(true);
                   setChecking(false);
