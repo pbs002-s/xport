@@ -69,7 +69,7 @@ function Terminal({ onCommand }) {
       { t: "out", html: `<span class="accent">      ╚═╝      </span>  name     ${D.identity.name}` },
       { t: "out", html: `<span class="accent">    ▄▄▄▄▄▄▄    </span>  roles    ${D.identity.roles.slice(0,2).join(", ")}` },
       { t: "out", html: `<span class="accent">   █ dev █ █   </span>  contribs 350+ (past year)` },
-      { t: "out", html: `<span class="accent">    ▀▀▀▀▀▀▀    </span>  stack    TypeScript · React · Kotlin · AI` },
+      { t: "out", html: `<span class="accent">    ▀▀▀▀▀▀▀    </span>  stack    Python · PyTorch · TypeScript · React · AI` },
     ]),
     clear: () => { setLines([]); return null; },
     theme: () => { onCommand && onCommand("toggle-theme"); return [{ t: "out", html: "theme toggled." }]; },

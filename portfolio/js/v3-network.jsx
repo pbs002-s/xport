@@ -4,10 +4,10 @@
    live stats, hover tooltip, click-to-pin detail panel.
 ============================================================ */
 const NET_CATS = [
-  { key: "app", label: "Backend / Frontend", color: "#e2622b", cats: ["Backend & Frontend"] },
-  { key: "ops", label: "Server / Infra", color: "#1f9d57", cats: ["Server & Infrastructure"] },
-  { key: "api", label: "APIs / Integration", color: "#7a3be2", cats: ["APIs & Integration"] },
-  { key: "mob", label: "Mobile", color: "#2f9bd6", cats: ["Mobile"] },
+  { key: "app", label: "Core & Web", color: "#e2622b", cats: ["Core Languages & Tech", "Backend & Frontend"] },
+  { key: "ai", label: "AI & Neural Systems", color: "#be123c", cats: ["AI & Automation", "AI & ML", "APIs & Integration"] },
+  { key: "mob", label: "Mobile & Frameworks", color: "#2f9bd6", cats: ["Frameworks & Mobile", "Mobile"] },
+  { key: "ops", label: "Tools & Systems", color: "#1f9d57", cats: ["Engineering & Tools", "Server & Infrastructure"] },
 ];
 const NET_ETC = { key: "etc", label: "Other", color: "#8a8276" };
 
@@ -15,7 +15,8 @@ function buildCatLookup(D) {
   const itemCat = {};
   (D.skills || []).forEach((s) => s.items.forEach((it) => { itemCat[it.toLowerCase()] = s.cat; }));
   return (techName) => {
-    const cat = itemCat[techName.toLowerCase()];
+    const raw = techName.toLowerCase();
+    const cat = itemCat[raw] || itemCat[raw.replace(/\s*\d+(\.\d+)?$/, "")];
     const found = NET_CATS.find((c) => c.cats.includes(cat));
     return found || NET_ETC;
   };

@@ -13,7 +13,9 @@ const langColor = (l) => LANG_COLORS[l] || "var(--accent)";
 
 /* curated pinned repositories — the work I want front-and-centre */
 const PINNED = [
-  { name: "EduSync", lang: "TypeScript", featured: true,
+  { name: "ura-shree-agent", lang: "Python", featured: true,
+    desc: "100% self-made, fully local AI language model and autonomous coding agent in PyTorch & React. Zero external APIs, AST indexing, safe tool sandbox, and real-time developer cockpit." },
+  { name: "EduSync", lang: "TypeScript",
     desc: "Distributed campus collaboration platform: 4 role-scoped portals, real-time Socket.IO messaging over Redis Pub/Sub, and academic lifecycle management." },
   { name: "BhoomiSheba", lang: "TypeScript",
     desc: "Next-gen Bangladesh land automation platform: PostGIS spatial GIS, e-mutation tracking, multi-source cross-audits & instant QR e-Dakhila." },
@@ -91,7 +93,7 @@ function GitHubV3() {
   const rest = PINNED.filter((p) => !p.featured);
 
   /* last-known real values — shown instantly + as fallback when the GitHub API is rate-limited (60 req/hr) */
-  const FB = { contrib: 352, repos: 12, followers: 11, stars: 23 };
+  const FB = { contrib: 352, repos: 13, followers: 11, stars: 23 };
   const contribTotal = (cal && cal.total != null) ? cal.total : FB.contrib;
   const stats = [
     { v: stat(profile && profile.public_repos != null ? profile.public_repos : FB.repos), l: "repositories", sub: "public" },

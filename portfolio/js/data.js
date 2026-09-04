@@ -19,13 +19,13 @@ window.DATA = {
     phone: "",
     site: "https://pritam-biswas-portfolio.netlify.app",
     summary:
-      "Second-year CSE undergraduate (B.Tech, expected graduation 2028) at Daffodil International University who has shipped multiple production-grade, AI-integrated and distributed products — EduSync (a multi-tenant digital campus collaboration platform), BhashaBot (a multilingual GPT-4o support agent live across 18 languages), OpenGovtBD (a civic engagement platform), medicalLLM (an EMG ALS screening platform), and DIU Routine (a native Android app with Gemini Vision). Every project was built solo, end-to-end — architecture, Git-based version control, debugging, and interface.",
+      "Second-year CSE undergraduate (B.Tech, expected graduation 2028) at Daffodil International University who has shipped multiple production-grade, AI-integrated and distributed products — URA-Shree (a from-scratch PyTorch LLM and autonomous coding agent), EduSync (a multi-tenant digital campus collaboration platform), BhashaBot (a multilingual GPT-4o support agent live across 18 languages), OpenGovtBD (a civic engagement platform), medicalLLM (an EMG ALS screening platform), and DIU Routine (a native Android app with Gemini Vision). Every project was built solo, end-to-end — architecture, Git-based version control, debugging, and interface.",
   },
 
   // KPI / status widgets for the hero console
   stats: [
     { label: "contributions", value: "350+", sub: "past year" },
-    { label: "repositories", value: "13", sub: "public & private" },
+    { label: "repositories", value: "14", sub: "public & private" },
     { label: "problems", value: "100+", sub: "LeetCode & CP" },
     { label: "stack", value: "full", sub: "web · mobile · ai" },
   ],
@@ -44,16 +44,33 @@ window.DATA = {
     {
       cat: "AI & Automation",
       cmd: "stack --ai",
-      items: ["GPT-4o API", "Gemini API", "Gemini Vision", "n8n Workflows", "PyTorch", "Florence-2", "XGBoost", "Grad-CAM", "SHAP", "K-Means Clustering", "PCA", "Groq / Llama 3.3"],
+      items: ["PyTorch", "From-Scratch LLM", "Autonomous Agent", "AST Indexing", "GPT-4o API", "Gemini API", "Gemini Vision", "Florence-2", "XGBoost", "Grad-CAM", "SHAP", "Groq / Llama 3.3"],
     },
     {
       cat: "Engineering & Tools",
       cmd: "stack --tools",
-      items: ["Git / GitHub", "Docker", "Socket.IO", "Redis", "PostgreSQL", "CRUD Architecture", "Role-Based Access", "REST APIs", "Room DB", "PostGIS", "Chart.js", "MySQL", "Linux"],
+      items: ["Git / GitHub", "Docker", "FastAPI", "WebSockets", "Socket.IO", "Redis", "PostgreSQL", "CRUD Architecture", "Role-Based Access", "REST APIs", "Room DB", "PostGIS", "Linux"],
     },
   ],
 
   projects: [
+    {
+      name: "URA-Shree",
+      tag: "From-Scratch Local LLM & Autonomous Coding Agent",
+      status: "LIVE / OSS",
+      period: "2026",
+      url: "https://github.com/pbs002-s/ura-shree-agent",
+      role: "Solo Creator & AI Systems Architect",
+      reel: "urashree",
+      blurb:
+        "A 100% self-made, fully local AI language model and autonomous coding agent built from scratch in PyTorch & React. Zero external APIs required. Features an 11.3M-parameter decoder-only transformer with RoPE, SwiGLU, grouped-query attention (GQA), and KV cache, paired with a custom byte-level BPE tokenizer, AST workspace symbol indexer, safe tool sandbox with human approval, persistent shell, and Time Machine snapshot rollbacks.",
+      highlights: [
+        "11.3M-param decoder-only transformer: RoPE, SwiGLU, GQA & KV-cache with lossless 4096-token byte-level BPE",
+        "Autonomous agent loop & AST symbol indexing with zero-external-API local execution or multi-provider API seam",
+        "Human-in-the-loop approval sandbox, persistent virtualenv shell, and content-addressed Time Machine workspace snapshots",
+      ],
+      stack: ["Python", "PyTorch", "React 19", "TypeScript", "FastAPI", "WebSockets", "Docker"],
+    },
     {
       name: "EduSync",
       tag: "Campus Collaboration & Digital University Platform",
@@ -156,6 +173,13 @@ window.DATA = {
   // open-source / personal builds (github.com/pbs002-s) — shown in Work + skill graph
   ghProjects: [
     {
+      name: "URA-Shree", short: "URA-Shree", gh: "ura-shree-agent", status: "OPEN SOURCE", lang: "Python",
+      tag: "From-Scratch Local LLM & Coding Agent", role: "Solo Creator & AI Systems Architect", period: "Open source · PyTorch / React", reel: "urashree",
+      blurb: "100% self-made local LLM and autonomous coding agent in PyTorch & React: 11.3M transformer, custom BPE, AST symbol index, safe approval sandbox & Time Machine snapshots.",
+      highlights: ["11.3M RoPE/SwiGLU/GQA transformer + byte-level BPE", "Autonomous tool loop with AST symbol indexing", "Safe approval sandbox & Time Machine snapshot tree"],
+      stack: ["Python", "PyTorch", "React 19", "TypeScript", "FastAPI", "WebSockets", "Docker"],
+    },
+    {
       name: "EduSync", short: "EduSync", gh: "EduSync", status: "OPEN SOURCE", lang: "TypeScript",
       tag: "Digital University Platform", role: "Architect & Creator", period: "Open source · React 19 / Laravel / Socket.IO", reel: "edusync",
       blurb: "Multi-tenant digital university platform: 4 role-scoped portals, real-time Socket.IO messaging over Redis Pub/Sub, PostgreSQL full-text search & Docker orchestration.",
@@ -205,7 +229,7 @@ window.DATA = {
       org: "Independent & Open Source Products",
       period: "2024 — Present",
       place: "Dhaka, Bangladesh",
-      desc: "Architected and shipped production-grade distributed and AI-integrated software products solo end-to-end: EduSync (digital university collaboration platform), BhashaBot (multilingual AI customer agent), OpenGovtBD (Spring Boot civic engagement platform), and DIU Routine (Gemini Vision Android scheduler).",
+      desc: "Architected and shipped production-grade distributed and AI-integrated software products solo end-to-end: URA-Shree (from-scratch PyTorch LLM & autonomous coding agent), EduSync (digital university collaboration platform), BhashaBot (multilingual AI customer agent), OpenGovtBD (Spring Boot civic engagement platform), and DIU Routine (Gemini Vision Android scheduler).",
     },
     {
       role: "Competitive Programmer",

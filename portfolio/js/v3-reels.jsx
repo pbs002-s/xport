@@ -38,7 +38,7 @@ function ProjectReel({ kind }) {
       const t = (now - t0) / 1000;
       const g = {
         ctx, t, clamp, ease, easeIO, ...H2,
-        A: V("--accent", "#be123c"), INK: V("--ink", "#16140f"), INK2: V("--ink-2", "#524e48"),
+        A: V("--accent", "#be123c"), AS: V("--accent-soft", "rgba(190,18,60,.10)"), INK: V("--ink", "#16140f"), INK2: V("--ink-2", "#524e48"),
         INK3: V("--ink-3", "#6e695e"), LINE: V("--line-2", "rgba(0,0,0,.18)"), SURF: V("--surface", "#fff"),
         PAPER: V("--paper", "#f4f1ea"), green: "#1f9d57", red: "#e23b5a", amber: "#e0922b",
       };
@@ -916,5 +916,229 @@ REEL_DRAW.signal = function (g) {
   ctx.restore();
 };
 
+/* ============================================================
+   URA-SHREE — own from-scratch LLM, its chatbot, and the agent features.
+     0 the model itself: byte-level BPE + 11.3M decoder trained from zero
+     1 the chatbot: local streaming chat, no external API
+     2 the agent: tool loop, AST index, human approval gate
+     3 the feature deck: sandbox, shell, Time Machine, provider seam
+============================================================ */
+REEL_DRAW.urashree = function (g) {
+  const { ctx, w, h, t, PAD, A, AS, INK, INK2, INK3, LINE, SURF, PAPER, green, amber, red, T, rr, dot, clamp, ease, easeIO } = g;
+  const { idx, lo, sl } = scenes(g, 4, 3);
+  const F = (k) => Math.round(w * k);
+
+  /* persistent chrome */
+  ctx.fillStyle = SURF; ctx.strokeStyle = LINE; ctx.lineWidth = 1;
+  rr(PAD, PAD, w - 2 * PAD, h * 0.12, 5); ctx.fill(); ctx.stroke();
+  dot(PAD + 15, PAD + h * 0.06, 5, A);
+  T("URA-Shree · own model + agent", PAD + 28, PAD + h * 0.078, F(0.025), INK, "left", 600);
+  T(["Trained from scratch", "Chatbot", "Agent loop", "Features"][idx], w - PAD - 10, PAD + h * 0.078, F(0.022), INK3, "right");
+
+  const bx = PAD, by = PAD + h * 0.16, bw = w - 2 * PAD, bh = h - by - PAD - h * 0.06;
+  const foot = (s, col) => { if (lo > 1.5) T(s, bx, by + bh * 0.97, F(0.021), col || green); };
+  const card = (x, y, cw, ch, on) => { ctx.fillStyle = on ? AS : SURF; ctx.strokeStyle = on ? A : LINE; ctx.lineWidth = on ? 1.5 : 1; rr(x, y, cw, ch, 5); ctx.fill(); ctx.stroke(); ctx.lineWidth = 1; };
+  ctx.save(); ctx.translate(sl, 0);
+
+  if (idx === 0) {
+    /* ---- Scene 0: the model, built and trained from zero ---- */
+    T("My Own Model · Not a Fine-Tune", bx, by + h * 0.045, F(0.026), INK, "left", 600);
+    T("PyTorch · 11.3M params", bx + bw, by + h * 0.045, F(0.02), A, "right", 500);
+
+    /* raw text -> BPE tokens -> ids */
+    const tokY = by + bh * 0.09, tokH = bh * 0.24;
+    card(bx, tokY, bw, tokH);
+    T("Custom byte-level BPE · 4096 vocab · lossless round-trip", bx + 12, tokY + tokH * 0.28, F(0.019), INK3);
+    const toks = [["def", "104"], ["agent", "819"], ["_step", "377"], ["(", "42"], ["ctx", "302"]];
+    const tGap = 6, tBoxW = (bw - 24 - (toks.length - 1) * tGap) / toks.length;
+    toks.forEach((tk, i) => {
+      const p = clamp((lo - 0.1 - i * 0.1) / 0.3, 0, 1); if (p <= 0) return;
+      ctx.globalAlpha = p;
+      const tx = bx + 12 + i * (tBoxW + tGap), ty = tokY + tokH * 0.42;
+      const on = Math.floor(t * 3) % toks.length === i;
+      ctx.fillStyle = on ? AS : PAPER; ctx.strokeStyle = on ? A : LINE;
+      rr(tx, ty, tBoxW, tokH * 0.46, 4); ctx.fill(); ctx.stroke();
+      T(tk[0], tx + tBoxW / 2, ty + tokH * 0.21, F(0.019), INK, "center", 500);
+      T(tk[1], tx + tBoxW / 2, ty + tokH * 0.38, F(0.016), A, "center");
+      ctx.globalAlpha = 1;
+    });
+
+    /* left: architecture written by hand · right: training loss actually descending */
+    const aY = by + bh * 0.38, aH = bh * 0.5, lw = bw * 0.5, rw = bw - lw - 10, rx = bx + lw + 10;
+    card(bx, aY, lw, aH);
+    T("Written layer by layer", bx + 12, aY + aH * 0.16, F(0.02), INK, "left", 600);
+    [["Decoder blocks", "12 · d_model 384"],
+     ["Attention", "8 Q / 2 KV heads (GQA)"],
+     ["Positional", "Rotary embeddings (RoPE)"],
+     ["FFN", "SwiGLU · dim 1024"],
+     ["Decode", "KV cache · 512 ctx"]].forEach((s, i) => {
+      const p = clamp((lo - 0.35 - i * 0.12) / 0.3, 0, 1); if (p <= 0) return;
+      ctx.globalAlpha = p;
+      const sy = aY + aH * (0.32 + i * 0.145);
+      T(s[0], bx + 12, sy, F(0.018), INK3);
+      T(s[1], bx + lw - 10, sy, F(0.018), INK, "right", 500);
+      ctx.globalAlpha = 1;
+    });
+
+    card(rx, aY, rw, aH);
+    T("Training loss", rx + 10, aY + aH * 0.16, F(0.02), INK, "left", 600);
+    const gx = rx + 12, gy = aY + aH * 0.26, gw = rw - 24, gh = aH * 0.5;
+    ctx.strokeStyle = LINE; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gh); ctx.lineTo(gx + gw, gy + gh); ctx.stroke();
+    const prog = clamp((lo - 0.3) / 1.6, 0, 1);
+    const lossAt = (u) => 0.08 + 0.86 * Math.exp(-3.4 * u) + 0.035 * Math.sin(u * 26);
+    ctx.strokeStyle = A; ctx.lineWidth = 1.8; ctx.beginPath();
+    for (let i = 0; i <= 60; i++) {
+      const u = (i / 60) * prog;
+      const px = gx + u * gw, py = gy + lossAt(u) * gh * 0.94;
+      i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+    }
+    ctx.stroke(); ctx.lineWidth = 1;
+    if (prog > 0) dot(gx + prog * gw, gy + lossAt(prog) * gh * 0.94, 3, A);
+    T("step " + Math.round(prog * 12000).toLocaleString(), rx + 10, aY + aH * 0.93, F(0.017), INK3);
+    T("loss " + lossAt(prog).toFixed(3), rx + rw - 10, aY + aH * 0.93, F(0.017), green, "right", 500);
+
+    foot("Tokenizer, transformer and training loop written from scratch · no pretrained weights");
+
+  } else if (idx === 1) {
+    /* ---- Scene 1: the chatbot talking, fully local ---- */
+    T("Chatbot · Runs Fully Local", bx, by + h * 0.045, F(0.026), INK, "left", 600);
+    T("0 external API calls", bx + bw, by + h * 0.045, F(0.02), green, "right", 600);
+
+    const chY = by + bh * 0.09, chH = bh * 0.66;
+    card(bx, chY, bw, chH);
+
+    /* user turn */
+    const uw = bw * 0.56, up = easeIO(clamp(lo / 0.35, 0, 1));
+    ctx.globalAlpha = up;
+    ctx.fillStyle = A; rr(bx + bw - uw - 12, chY + chH * 0.08, uw, chH * 0.2, 6); ctx.fill();
+    T("why is my loss stuck at 4.1?", bx + bw - 22, chY + chH * 0.21, F(0.019), "#fff", "right", 500);
+    ctx.globalAlpha = 1;
+
+    /* assistant turn, streamed word by word */
+    if (lo > 0.45) {
+      const words = "Warmup ends at step 200 but the cosine decay starts at step 0, so the LR is already floored. Move the decay to begin after warmup.".split(" ");
+      const shown = Math.min(words.length, Math.floor((lo - 0.45) * 12));
+      const aw = bw * 0.74, ax = bx + 12, ay = chY + chH * 0.34;
+      ctx.fillStyle = PAPER; ctx.strokeStyle = LINE; rr(ax, ay, aw, chH * 0.56, 6); ctx.fill(); ctx.stroke();
+      dot(ax + 14, ay + chH * 0.09, 4, A);
+      T("URA-Shree", ax + 24, ay + chH * 0.11, F(0.018), INK3, "left", 600);
+      const size = F(0.019), maxChars = Math.max(12, Math.floor((aw - 28) / (size * 0.6)));
+      let line = "", row = 0;
+      const put = (s, r) => T(s, ax + 14, ay + chH * (0.24 + r * 0.1), size, INK, "left");
+      for (let i = 0; i < shown; i++) {
+        const next = line ? line + " " + words[i] : words[i];
+        if (next.length > maxChars) { put(line, row); row++; line = words[i]; } else line = next;
+      }
+      if (line) {
+        put(line, row);
+        if (shown < words.length && Math.floor(t * 3) % 2) {
+          ctx.fillStyle = A;
+          ctx.fillRect(ax + 16 + ctx.measureText(line).width, ay + chH * (0.24 + row * 0.1) - size * 0.85, 2, size);
+        }
+      }
+    }
+
+    /* live decode meter */
+    const mY = by + bh * 0.79, mH = bh * 0.17;
+    card(bx, mY, bw, mH);
+    [["model", "ura-shree · 11.3M"], ["decode", Math.round(38 + 6 * Math.sin(t * 2)) + " tok/s"], ["cost", "$0.00"]].forEach((s, i) => {
+      const cx0 = bx + 14 + i * ((bw - 28) / 3);
+      T(s[0], cx0, mY + mH * 0.42, F(0.017), INK3);
+      T(s[1], cx0, mY + mH * 0.8, F(0.02), i === 2 ? green : INK, "left", 600);
+    });
+
+    foot("Weights, tokenizer and inference all on your machine · nothing leaves the laptop");
+
+  } else if (idx === 2) {
+    /* ---- Scene 2: agent loop, AST grounding, approval gate ---- */
+    T("Autonomous Agent Loop", bx, by + h * 0.045, F(0.026), INK, "left", 600);
+    T("auto_approve: false", bx + bw, by + h * 0.045, F(0.02), amber, "right", 600);
+
+    const tools = ["read_file", "ast_index", "grep", "write_patch", "shell"];
+    const act = Math.floor(t * 2.2) % tools.length;
+    const tw = (bw - 20) / tools.length, tY = by + bh * 0.1, tH = bh * 0.12;
+    tools.forEach((tl, i) => {
+      const p = clamp((lo - 0.05 - i * 0.08) / 0.25, 0, 1); if (p <= 0) return;
+      ctx.globalAlpha = p;
+      const tx = bx + 10 + i * tw, on = i === act;
+      ctx.fillStyle = on ? A : SURF; ctx.strokeStyle = on ? A : LINE;
+      rr(tx + 2, tY, tw - 4, tH, 4); ctx.fill(); ctx.stroke();
+      T(tl, tx + tw / 2, tY + tH * 0.66, F(0.017), on ? "#fff" : INK2, "center", on ? 600 : 400);
+      ctx.globalAlpha = 1;
+    });
+
+    /* AST symbol index — the grounding that stops invented paths */
+    const sY = by + bh * 0.27, sH = bh * 0.33;
+    card(bx, sY, bw, sH);
+    T("AST workspace index", bx + 12, sY + sH * 0.22, F(0.019), INK, "left", 600);
+    [["class DecoderTransformer", "model/transformer.py:42", A],
+     ["def compute_rope(seq_len)", "model/rope.py:116 · 3 call sites", green]].forEach((s, i) => {
+      const p = easeIO(clamp((lo - 0.3 - i * 0.2) / 0.35, 0, 1)); if (p <= 0) return;
+      ctx.globalAlpha = p;
+      const sy = sY + sH * (0.52 + i * 0.28);
+      dot(bx + 16, sy - sH * 0.05, 3.5, s[2]);
+      T(s[0], bx + 28, sy, F(0.018), INK, "left", 500);
+      T(s[1], bx + bw - 14, sy, F(0.017), s[2], "right", 500);
+      ctx.globalAlpha = 1;
+    });
+
+    /* approval gate */
+    const ok = lo >= 1.7, dY = by + bh * 0.64, dH = bh * 0.32;
+    card(bx, dY, bw, dH, ok);
+    if (!ok) {
+      dot(bx + 18, dY + dH * 0.34, 5, amber);
+      T("Allow write_patch on src/agent/sandbox.py?", bx + 32, dY + dH * 0.38, F(0.021), INK, "left", 600);
+      T("agent paused until you answer", bx + 32, dY + dH * 0.7, F(0.018), INK3);
+      const bwid = bw * 0.18, bhg = dH * 0.44;
+      ctx.fillStyle = PAPER; ctx.strokeStyle = LINE; rr(bx + bw - bwid * 2 - 20, dY + dH * 0.28, bwid, bhg, 4); ctx.fill(); ctx.stroke();
+      T("Deny", bx + bw - bwid * 1.5 - 20, dY + dH * 0.58, F(0.02), INK3, "center", 500);
+      ctx.globalAlpha = 0.85 + 0.15 * Math.sin(t * 6);
+      ctx.fillStyle = A; rr(bx + bw - bwid - 10, dY + dH * 0.28, bwid, bhg, 4); ctx.fill();
+      ctx.globalAlpha = 1;
+      T("Approve ↵", bx + bw - bwid / 2 - 10, dY + dH * 0.58, F(0.02), "#fff", "center", 600);
+    } else {
+      dot(bx + 20, dY + dH * 0.5, 6, green);
+      T("Approved · patch applied", bx + 34, dY + dH * 0.44, F(0.022), green, "left", 600);
+      T("snapshot taken before the write", bx + 34, dY + dH * 0.74, F(0.018), INK2);
+    }
+
+    foot("Every edit grounded in the real AST and gated on a human yes");
+
+  } else {
+    /* ---- Scene 3: what it ships with ---- */
+    T("What It Ships With", bx, by + h * 0.045, F(0.026), INK, "left", 600);
+    T("one workspace · one agent", bx + bw, by + h * 0.045, F(0.02), INK3, "right");
+
+    const feats = [
+      ["Own LLM", "11.3M decoder, trained from zero", A],
+      ["Local chatbot", "streaming, no API key needed", green],
+      ["Agent loop", "plan → tool → observe → repeat", A],
+      ["Safe sandbox", "approval gate on every mutation", amber],
+      ["Persistent shell", "one venv across the session", green],
+      ["Time Machine", "SHA-256 snapshots, instant rollback", A],
+    ];
+    const cw = (bw - 10) / 2, ch = (bh * 0.82 - 20) / 3;
+    feats.forEach((f, i) => {
+      const p = easeIO(clamp((lo - 0.1 - i * 0.11) / 0.35, 0, 1)); if (p <= 0) return;
+      ctx.globalAlpha = p;
+      const cx0 = bx + (i % 2) * (cw + 10), cy0 = by + bh * 0.1 + Math.floor(i / 2) * (ch + 10);
+      card(cx0, cy0, cw, ch);
+      dot(cx0 + 14, cy0 + ch * 0.36, 4, f[2]);
+      T(f[0], cx0 + 26, cy0 + ch * 0.42, F(0.021), INK, "left", 600);
+      T(f[1], cx0 + 26, cy0 + ch * 0.75, F(0.017), INK3);
+      ctx.globalAlpha = 1;
+    });
+
+    foot("Built solo end to end · PyTorch model, FastAPI backend, React 19 client");
+  }
+
+  ctx.restore();
+};
+
+/* alias keys for robustness */
+REEL_DRAW["ura-shree"] = REEL_DRAW.urashree;
+REEL_DRAW["ura-shree-agent"] = REEL_DRAW.urashree;
+
 
 Object.assign(window, { ProjectReel, REEL_DRAW });
+
