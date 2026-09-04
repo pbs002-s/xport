@@ -210,7 +210,18 @@ function WorkV3() {
   const D = window.DATA;
   const all = D.mergedProjects();
 
-  const kindOf = (p) => p.reel || "dashboard";
+  const kindOf = (p) => {
+    if (p.reel && REEL_DRAW[p.reel]) return p.reel;
+    const n = ((p.name || "") + " " + (p.gh || "") + " " + (p.short || "")).toLowerCase();
+    if (n.includes("ura-shree") || n.includes("urashree")) return "urashree";
+    if (n.includes("edusync")) return "edusync";
+    if (n.includes("bhashabot")) return "bhashabot";
+    if (n.includes("routine")) return "diuroutine";
+    if (n.includes("opengovt")) return "opengovtbd";
+    if (n.includes("bhoomi")) return "bhoomisheba";
+    if (n.includes("signal") || n.includes("emg") || n.includes("als") || n.includes("medicalllm")) return "signal";
+    return p.reel || "urashree";
+  };
   const hostLabel = (p) => p.url.replace(/^https?:\/\//, "").replace(/\/$/, "");
   return (
     <section id="work" className="section">

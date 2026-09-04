@@ -78,6 +78,7 @@ window.DATA = {
       period: "2026",
       url: "https://github.com/pbs002-s/EduSync",
       role: "Full-Stack Architect",
+      reel: "edusync",
       blurb:
         "A multi-tenant digital campus collaboration platform unifying 4 role-scoped portals (Student, Teacher, Super Admin, and Campus Authority) with real-time Socket.IO messaging over Redis Pub/Sub, academic lifecycle management, routine conflict detection, and background queue workers.",
       highlights: [
@@ -94,6 +95,7 @@ window.DATA = {
       period: "2026 — Present",
       url: "https://github.com/pbs002-s/BhashaBot",
       role: "Solo Creator",
+      reel: "bhashabot",
       blurb:
         "Automated Facebook Messenger support with an n8n workflow that detects customer language across 18 languages — including native Bangla/Banglish — using a single GPT-4o call to return reply, sentiment, intent, lead data, and a human-handoff flag.",
       highlights: [
@@ -110,6 +112,7 @@ window.DATA = {
       period: "2026",
       url: "https://github.com/pbs002-s/medicalLLM",
       role: "Solo Creator",
+      reel: "signal",
       blurb:
         "An end-to-end clinical neurophysiology platform that screens for Amyotrophic Lateral Sclerosis from raw EMG signals, fusing a 1-D CNN over the waveform with a Florence-2 vision-language model over spectrogram plots, then reconciling both through an XGBoost meta-learner.",
       highlights: [
@@ -126,6 +129,7 @@ window.DATA = {
       period: "2026",
       url: "https://github.com/pbs002-s/diu-routine",
       role: "Creator & Maintainer",
+      reel: "diuroutine",
       blurb:
         "A native Kotlin & Jetpack Compose Android app that scans uploaded routine PDFs/DOCX with Gemini Vision to auto-extract dates, times, rooms, and course codes into a fully offline timetable.",
       highlights: [
@@ -143,6 +147,7 @@ window.DATA = {
       url: "https://github.com/pbs002-s/OpenGovtBD",
       live: "https://opengovtbd.onrender.com/",
       role: "Full-Stack Developer",
+      reel: "opengovtbd",
       blurb:
         "A role-driven civic platform built on Java 17 and Spring Boot 3 MVC — Citizen, Officer and Super Admin workspaces covering the full complaint lifecycle, moderated public discussions, official polls, a suggestion box, and an analytics dashboard.",
       highlights: [
@@ -159,6 +164,7 @@ window.DATA = {
       period: "2026",
       url: "https://github.com/pbs002-s/BhoomiSheba",
       role: "Solo Creator",
+      reel: "bhoomisheba",
       blurb:
         "Next-gen Bangladesh land automation platform: PostGIS spatial GIS, e-mutation tracking, multi-source cross-audits, and instant QR-verified e-Dakhila generation.",
       highlights: [
