@@ -2,6 +2,7 @@
   # Set the publish directory to the portfolio folder containing index.html
   publish = "portfolio"
   command = ""
+  functions = "netlify/functions"
 
 [[headers]]
   for = "/*"

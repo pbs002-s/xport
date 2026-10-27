@@ -39,6 +39,7 @@ function GitHubV3() {
   const [totalStars, setTotalStars] = useState(null);
   const [cal, setCal] = useState(null);
   const [tip, setTip] = useState(null);
+  const [priv, setPriv] = useState(false);   // true → calendar comes from our private-inclusive function
 
   useEffect(() => {
     let alive = true;
@@ -46,7 +47,25 @@ function GitHubV3() {
       const [pf, rp, cc] = await Promise.allSettled([
         fetch(`https://api.github.com/users/${GH_USER}`).then((r) => r.ok ? r.json() : Promise.reject()),
         fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=pushed`).then((r) => r.ok ? r.json() : Promise.reject()),
-        fetch(`https://github-contributions-api.jogruber.de/v4/${GH_USER}?y=last`).then((r) => r.ok ? r.json() : Promise.reject()),
+        (async () => {
+          // our Netlify function: private-inclusive calendar; falls back to jogruber's public-only view
+          try {
+            const r = await fetch(`/.netlify/functions/github-contributions`);
+            if (r.ok) {
+              const fn = await r.json();
+              const LV = { NONE: 0, FIRST_QUARTILE: 1, SECOND_QUARTILE: 2, THIRD_QUARTILE: 3, FOURTH_QUARTILE: 4 };
+              if (Array.isArray(fn.calendar)) {
+                return {
+                  contributions: fn.calendar.map((d) => ({ date: d.date, count: d.count, level: LV[d.level] ?? 0 })),
+                  total: { lastYear: fn.stats.totalContributionsLastYear },
+                  private: true };
+              }
+            }
+          } catch {}
+          const r = await fetch(`https://github-contributions-api.jogruber.de/v4/${GH_USER}?y=last`);
+          if (!r.ok) throw new Error("contributions unavailable");
+          return r.json();
+        })(),
       ]);
       if (!alive) return;
       let ok = false;
@@ -65,6 +84,7 @@ function GitHubV3() {
       if (cc.status === "fulfilled" && cc.value && cc.value.contributions) {
         const total = (cc.value.total && (cc.value.total.lastYear || Object.values(cc.value.total)[0])) || cc.value.contributions.reduce((s, d) => s + d.count, 0);
         setCal({ cells: cc.value.contributions.map((d) => ({ ...d, wd: new Date(d.date + "T00:00").getDay() })), total });
+        if (cc.value.private) setPriv(true);
         ok = true;
       }
       if (!langs.length && (rp.status !== "fulfilled")) setLangs([{ k: "TypeScript", pct: 48 }, { k: "Kotlin", pct: 39 }, { k: "JavaScript", pct: 5 }, { k: "Python", pct: 4 }, { k: "Java", pct: 4 }]);
@@ -93,7 +113,7 @@ function GitHubV3() {
   const rest = PINNED.filter((p) => !p.featured);
 
   /* last-known real values — shown instantly + as fallback when the GitHub API is rate-limited (60 req/hr) */
-  const FB = { contrib: 352, repos: 13, followers: 11, stars: 23 };
+  const FB = { contrib: 1028, repos: 17, followers: 12, stars: 23 };
   const contribTotal = (cal && cal.total != null) ? cal.total : FB.contrib;
   const stats = [
     { v: stat(profile && profile.public_repos != null ? profile.public_repos : FB.repos), l: "repositories", sub: "public" },
@@ -121,7 +141,7 @@ function GitHubV3() {
 
         <div className="gh-cal-card" data-rv data-d="1">
           <div className="gh-cal-head">
-            <div className="gh-contrib"><b>{contribTotal.toLocaleString()}</b><span>contributions<br/>in the last year</span></div>
+            <div className="gh-contrib"><b>{contribTotal.toLocaleString()}</b><span>contributions<br/>in the last year</span>{priv && <span style={{ fontSize: "0.62em", opacity: 0.75, marginLeft: "0.3em" }} title="Includes private repository activity">· incl. private</span>}</div>
             <span className="gh-legend">less {[0,1,2,3,4].map((l) => <i key={l} style={{ background: lvlBg(l), opacity: lvlOpacity(l) }}></i>)} more</span>
           </div>
           <div className="gh-cal-scroll">

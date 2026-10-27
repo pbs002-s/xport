@@ -815,8 +815,8 @@ REEL_DRAW.signal = function (g) {
   const emg = (i, n, burst) => {
     const u = i / n;
     let v = Math.sin(u * 74 + t * 2.2) * 0.34
-          + Math.sin(u * 151 - t * 1.4) * 0.2
-          + Math.sin(u * 311 + t * 3.1) * 0.12;
+      + Math.sin(u * 151 - t * 1.4) * 0.2
+      + Math.sin(u * 311 + t * 3.1) * 0.12;
     if (burst > 0) {
       // pathological burst window: denser, higher amplitude
       const d = Math.exp(-Math.pow((u - burst) * 7, 2));
@@ -1024,10 +1024,10 @@ REEL_DRAW.urashree = function (g) {
     card(bx, aY, lw, aH);
     T("Written layer by layer", bx + 12, aY + aH * 0.16, F(0.02), INK, "left", 600);
     [["Decoder blocks", "12 · d_model 384"],
-     ["Attention", "8 Q / 2 KV heads (GQA)"],
-     ["Positional", "Rotary embeddings (RoPE)"],
-     ["FFN", "SwiGLU · dim 1024"],
-     ["Decode", "KV cache · 512 ctx"]].forEach((s, i) => {
+    ["Attention", "8 Q / 2 KV heads (GQA)"],
+    ["Positional", "Rotary embeddings (RoPE)"],
+    ["FFN", "SwiGLU · dim 1024"],
+    ["Decode", "KV cache · 512 ctx"]].forEach((s, i) => {
       const p = clamp((lo - 0.35 - i * 0.12) / 0.3, 0, 1); if (p <= 0) return;
       ctx.globalAlpha = p;
       const sy = aY + aH * (0.32 + i * 0.145);
@@ -1131,7 +1131,7 @@ REEL_DRAW.urashree = function (g) {
     card(bx, sY, bw, sH);
     T("AST workspace index", bx + 12, sY + sH * 0.24, F(0.019), INK, "left", 600);
     [["class DecoderTransformer", "model/transformer.py:42", A],
-     ["def compute_rope(seq_len)", "model/rope.py:116 · 3 call sites", green]].forEach((s, i) => {
+    ["def compute_rope(seq_len)", "model/rope.py:116 · 3 call sites", green]].forEach((s, i) => {
       const p = easeIO(clamp((lo - 0.3 - i * 0.2) / 0.35, 0, 1)); if (p <= 0) return;
       ctx.globalAlpha = p;
       const sy = sY + sH * (0.54 + i * 0.28);
