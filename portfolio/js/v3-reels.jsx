@@ -1194,6 +1194,195 @@ REEL_DRAW.urashree = function (g) {
   ctx.restore();
 };
 
+/* ============================================================
+   LANDTECH 2026 — DIU land-records hackathon on the LandHack platform.
+   0 event hub  1 registration & fee verification  2 judging rubric  3 QA test run
+============================================================ */
+REEL_DRAW.landtech = function (g) {
+  const { ctx, w, h, t, PAD, A, AS, INK, INK2, INK3, LINE, SURF, PAPER, green, amber, red, T, rr, dot, clamp, easeIO } = g;
+  const { idx, lo, sl } = scenes(g, 4, 3);
+  const F = (k) => Math.round(w * k);
+
+  /* persistent chrome */
+  ctx.fillStyle = SURF; ctx.strokeStyle = LINE; ctx.lineWidth = 1;
+  rr(PAD, PAD, w - 2 * PAD, h * 0.12, 5); ctx.fill(); ctx.stroke();
+  dot(PAD + 15, PAD + h * 0.06, 5, A);
+  T("LandTech 2026 · DIU CSE", PAD + 28, PAD + h * 0.078, F(0.025), INK, "left", 600);
+  T(["Event hub", "Registration", "Judging", "QA run"][idx], w - PAD - 12, PAD + h * 0.078, F(0.022), INK3, "right");
+
+  const bx = PAD, by = PAD + h * 0.16, bw = w - 2 * PAD, bh = h - by - PAD - h * 0.06;
+  const foot = (s, col) => {
+    if (lo > 1.3) {
+      const fs = Math.min(F(0.019), Math.max(9, Math.floor((bw - 16) / (s.length * 0.58))));
+      T(s, bx + 8, by + bh * 0.925, fs, col || green, "left", 500);
+    }
+  };
+  const card = (x, y, cw, ch, on) => { ctx.fillStyle = on ? AS : SURF; ctx.strokeStyle = on ? A : LINE; ctx.lineWidth = on ? 1.5 : 1; rr(x, y, cw, ch, 5); ctx.fill(); ctx.stroke(); ctx.lineWidth = 1; };
+  ctx.save(); ctx.translate(sl, 0);
+
+  if (idx === 0) {
+    /* ---- Scene 0: public event hub — countdown, caps, prize pool ---- */
+    T("Land Records & Fraud Prevention", bx + 4, by + h * 0.045, F(0.024), INK, "left", 600);
+    T("registration open", bx + bw - 4, by + h * 0.045, F(0.02), green, "right", 600);
+
+    /* parcel-grid backdrop + live countdown */
+    const cY = by + bh * 0.08, cH = bh * 0.3;
+    card(bx, cY, bw, cH);
+    ctx.save(); ctx.beginPath(); rr(bx, cY, bw, cH, 5); ctx.clip();
+    ctx.strokeStyle = LINE; ctx.globalAlpha = 0.5;
+    for (let i = 1; i < 9; i++) { const x = bx + (bw / 9) * i + Math.sin(i * 1.7) * 6; ctx.beginPath(); ctx.moveTo(x, cY); ctx.lineTo(x - 10, cY + cH); ctx.stroke(); }
+    for (let j = 1; j < 4; j++) { const y = cY + (cH / 4) * j; ctx.beginPath(); ctx.moveTo(bx, y); ctx.lineTo(bx + bw, y + Math.sin(j) * 5); ctx.stroke(); }
+    ctx.globalAlpha = 1; ctx.restore();
+    const left = Math.max(0, 3 * 86400 + 7 * 3600 + 42 * 60 + 18 - Math.floor(t));
+    const parts = [[Math.floor(left / 86400), "days"], [Math.floor(left / 3600) % 24, "hrs"], [Math.floor(left / 60) % 60, "min"], [left % 60, "sec"]];
+    const pw = (bw - 40) / 4;
+    parts.forEach((p, i) => {
+      const a = clamp((lo - 0.05 - i * 0.08) / 0.3, 0, 1); if (a <= 0) return;
+      ctx.globalAlpha = a;
+      const px = bx + 20 + i * pw;
+      ctx.fillStyle = PAPER; ctx.strokeStyle = LINE; rr(px + 4, cY + cH * 0.16, pw - 8, cH * 0.68, 5); ctx.fill(); ctx.stroke();
+      T(String(p[0]).padStart(2, "0"), px + pw / 2, cY + cH * 0.56, F(0.042), i === 3 ? A : INK, "center", 700, "d");
+      T(p[1], px + pw / 2, cY + cH * 0.76, F(0.016), INK3, "center");
+      ctx.globalAlpha = 1;
+    });
+
+    /* event facts */
+    const fY = by + bh * 0.42, fH = bh * 0.16, facts = [["2", "per team"], ["300", "BDT entry fee"], ["50", "team cap"], ["25", "finalists"]];
+    const fw = (bw - 30) / 4;
+    facts.forEach((f, i) => {
+      const a = easeIO(clamp((lo - 0.4 - i * 0.1) / 0.3, 0, 1)); if (a <= 0) return;
+      ctx.globalAlpha = a;
+      const fx = bx + i * (fw + 10);
+      card(fx, fY, fw, fH);
+      T(f[0], fx + 12, fY + fH * 0.5, F(0.026), INK, "left", 700, "d");
+      T(f[1], fx + 12, fY + fH * 0.82, F(0.016), INK3);
+      ctx.globalAlpha = 1;
+    });
+
+    /* prize pool bars */
+    const pY = by + bh * 0.62, pH = bh * 0.22;
+    card(bx, pY, bw, pH);
+    T("Prize pool · 100,000 BDT", bx + 12, pY + pH * 0.26, F(0.019), INK, "left", 600);
+    [["Champion", 50000, A], ["1st runner up", 30000, green], ["2nd runner up", 20000, amber]].forEach((p, i) => {
+      const a = clamp((lo - 0.7 - i * 0.12) / 0.5, 0, 1);
+      const ry = pY + pH * (0.44 + i * 0.2), barX = bx + bw * 0.3, barW = (bw * 0.5) * (p[1] / 50000) * easeIO(a);
+      T(p[0], bx + 12, ry + pH * 0.07, F(0.016), INK2);
+      ctx.fillStyle = p[2]; rr(barX, ry - pH * 0.04, Math.max(2, barW), pH * 0.12, 3); ctx.fill();
+      if (a > 0.9) T(p[1].toLocaleString(), bx + bw - 12, ry + pH * 0.07, F(0.016), INK, "right", 600);
+    });
+
+    foot("Knowledge Tower, Daffodil Smart City · organised by CSE-TECH");
+
+  } else if (idx === 1) {
+    /* ---- Scene 1: 4-step registration + committee fee verification ---- */
+    T("Register · 4 Steps", bx + 4, by + h * 0.045, F(0.026), INK, "left", 600);
+    T("draft autosaved", bx + bw - 4, by + h * 0.045, F(0.02), green, "right", 500);
+
+    const steps = ["Team", "You (lead)", "Teammate", "Fee & submit"];
+    const cur = Math.min(3, Math.floor(lo / 0.45));
+    const sw = bw / 4, sY = by + bh * 0.15;
+    ctx.strokeStyle = LINE; ctx.beginPath(); ctx.moveTo(bx + sw / 2, sY); ctx.lineTo(bx + bw - sw / 2, sY); ctx.stroke();
+    ctx.strokeStyle = A; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx + sw / 2, sY); ctx.lineTo(bx + sw / 2 + sw * cur, sY); ctx.stroke(); ctx.lineWidth = 1;
+    steps.forEach((s, i) => {
+      const cx = bx + sw * i + sw / 2, done = i < cur, on = i === cur;
+      ctx.fillStyle = done ? green : on ? A : SURF; ctx.strokeStyle = done ? green : on ? A : LINE;
+      ctx.beginPath(); ctx.arc(cx, sY, 9, 0, 7); ctx.fill(); ctx.stroke();
+      T(done ? "✓" : String(i + 1), cx, sY + 4, F(0.016), done || on ? "#fff" : INK3, "center", 600);
+      T(s, cx, sY + bh * 0.085, F(0.016), on ? INK : INK3, "center", on ? 600 : 400);
+    });
+
+    /* payment form */
+    const pY = by + bh * 0.3, pH = bh * 0.24;
+    card(bx, pY, bw, pH);
+    T("Pay 300 BDT · bKash / Nagad / Rocket", bx + 12, pY + pH * 0.28, F(0.019), INK, "left", 600);
+    const trx = "BKASH8K2Q9X1F";
+    const typed = trx.slice(0, Math.max(0, Math.floor((lo - 0.3) * 10)));
+    ctx.fillStyle = PAPER; ctx.strokeStyle = A; rr(bx + 12, pY + pH * 0.44, bw - 24, pH * 0.36, 4); ctx.fill(); ctx.stroke();
+    T("TrxID", bx + 22, pY + pH * 0.68, F(0.016), INK3);
+    T(typed, bx + 22 + F(0.07), pY + pH * 0.68, F(0.019), INK, "left", 600);
+    if (typed.length < trx.length && Math.floor(t * 3) % 2) { ctx.fillStyle = A; ctx.fillRect(bx + 24 + F(0.07) + ctx.measureText(typed).width, pY + pH * 0.54, 2, pH * 0.18); }
+
+    /* committee queue */
+    const qY = by + bh * 0.58, qH = bh * 0.28;
+    card(bx, qY, bw, qH);
+    T("Committee · fee verification queue", bx + 12, qY + qH * 0.2, F(0.018), INK, "left", 600);
+    [["Team Mouza", "BKASH8K2Q9X1F", 1.4], ["Khatian Kings", "NAGAD71Q04PZ", 1.8], ["Dag 1204", "ROCKET5521LM", 99]].forEach((r, i) => {
+      const ry = qY + qH * (0.44 + i * 0.22), ok = lo > r[2];
+      T(r[0], bx + 14, ry, F(0.017), INK);
+      T(r[1], bx + bw * 0.5, ry, F(0.016), INK3, "center");
+      ctx.fillStyle = ok ? green : amber; rr(bx + bw - 96, ry - qH * 0.13, 82, qH * 0.17, 8); ctx.fill();
+      T(ok ? "verified" : "pending", bx + bw - 55, ry - qH * 0.005, F(0.015), "#fff", "center", 600);
+    });
+
+    foot("Flow I tested: draft survives reloads, every TrxID reaches the committee queue");
+
+  } else if (idx === 2) {
+    /* ---- Scene 2: judge app + live hall display ---- */
+    T("Judge App · Final Round", bx + 4, by + h * 0.045, F(0.026), INK, "left", 600);
+    T("100-point rubric", bx + bw - 4, by + h * 0.045, F(0.02), A, "right", 500);
+
+    const rub = [["Working prototype", 25, 22], ["Technical depth", 20, 17], ["Originality", 15, 13], ["Impact", 15, 12], ["Usability", 15, 13], ["Demo & Q&A", 10, 9]];
+    const lw = bw * 0.62, rY = by + bh * 0.08, rH = bh * 0.76;
+    card(bx, rY, lw, rH);
+    T("Team Mouza · scoring", bx + 12, rY + rH * 0.09, F(0.019), INK, "left", 600);
+    let total = 0;
+    rub.forEach((r, i) => {
+      const a = easeIO(clamp((lo - 0.15 - i * 0.12) / 0.4, 0, 1));
+      const val = Math.round(r[2] * a); total += val;
+      const ry = rY + rH * (0.2 + i * 0.13), trackX = bx + lw * 0.5, trackW = lw * 0.36;
+      T(r[0], bx + 12, ry + 4, F(0.016), INK2);
+      ctx.fillStyle = PAPER; rr(trackX, ry - 4, trackW, 8, 4); ctx.fill();
+      ctx.fillStyle = A; rr(trackX, ry - 4, Math.max(2, trackW * (val / r[1])), 8, 4); ctx.fill();
+      T(val + "/" + r[1], bx + lw - 10, ry + 4, F(0.015), INK, "right", 500);
+    });
+
+    const sx = bx + lw + 10, swd = bw - lw - 10;
+    card(sx, rY, swd, rH, lo > 1.6);
+    T("Hall display", sx + 10, rY + rH * 0.09, F(0.018), INK, "left", 600);
+    T(String(total), sx + swd / 2, rY + rH * 0.34, F(0.06), A, "center", 700, "d");
+    T("Team Mouza", sx + swd / 2, rY + rH * 0.44, F(0.016), INK3, "center");
+    const board = lo > 1.6 ? [["Team Mouza", total], ["Dag 1204", 81], ["Khatian Kings", 77]] : [["Dag 1204", 81], ["Khatian Kings", 77], ["Team Mouza", total]];
+    board.forEach((b, i) => {
+      const yy = rY + rH * (0.6 + i * 0.12);
+      T((i + 1) + ". " + b[0], sx + 10, yy, F(0.015), i === 0 ? INK : INK2, "left", i === 0 ? 600 : 400);
+      T(String(b[1]), sx + swd - 10, yy, F(0.015), INK, "right", 500);
+    });
+
+    foot("Judge marks must reach the hall display live — one of the RCA cases I chased");
+
+  } else {
+    /* ---- Scene 3: QA — E2E suite across role surfaces ---- */
+    T("E2E Test Run · Full Lifecycle", bx + 4, by + h * 0.045, F(0.026), INK, "left", 600);
+    T("15 routes · 7 roles", bx + bw - 4, by + h * 0.045, F(0.02), INK3, "right");
+
+    const cases = [
+      ["SETUP", "9-step event wizard", 0], ["REGS", "team registration + fee", 0],
+      ["MENT", "mentor pairing", 0], ["REGS-011", "live registration count", 1],
+      ["JUDG-004", "score to hall display", 1], ["CTRL-012", "control-room standings", 1],
+      ["DISP-008", "results freeze state", 1], ["AUTH", "role-scoped sign-in", 0],
+    ];
+    const fixedNow = lo > 2.0;
+    const cw = (bw - 10) / 2, ch = (bh * 0.72 - 24) / 4;
+    cases.forEach((c, i) => {
+      const a = clamp((lo - 0.05 - i * 0.1) / 0.25, 0, 1); if (a <= 0) return;
+      ctx.globalAlpha = a;
+      const x0 = bx + (i % 2) * (cw + 10), y0 = by + bh * 0.07 + Math.floor(i / 2) * (ch + 8);
+      const col = !c[2] || fixedNow ? green : red;
+      card(x0, y0, cw, ch);
+      dot(x0 + 14, y0 + ch * 0.5, 4.5, col);
+      T(c[0], x0 + 26, y0 + ch * 0.42, F(0.016), INK, "left", 600);
+      T(c[1], x0 + 26, y0 + ch * 0.76, F(0.015), INK3);
+      T(!c[2] ? "pass" : fixedNow ? "fixed" : "fail", x0 + cw - 12, y0 + ch * 0.6, F(0.016), col, "right", 600);
+      ctx.globalAlpha = 1;
+    });
+
+    foot(fixedNow ? "4 failing cases traced to root cause · re-run green" : "Last-mile surfaces failing — writing RCA…", fixedNow ? green : amber);
+  }
+
+  ctx.restore();
+};
+REEL_DRAW["landtech-2026"] = REEL_DRAW.landtech;
+
 /* alias keys for robustness */
 REEL_DRAW["ura-shree"] = REEL_DRAW.urashree;
 REEL_DRAW["ura-shree-agent"] = REEL_DRAW.urashree;

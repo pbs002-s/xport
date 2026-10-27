@@ -219,6 +219,7 @@ function WorkV3() {
     if (n.includes("routine")) return "diuroutine";
     if (n.includes("opengovt")) return "opengovtbd";
     if (n.includes("bhoomi")) return "bhoomisheba";
+    if (n.includes("landtech")) return "landtech";
     if (n.includes("signal") || n.includes("emg") || n.includes("als") || n.includes("medicalllm")) return "signal";
     return p.reel || "urashree";
   };

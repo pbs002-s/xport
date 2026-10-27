@@ -55,6 +55,23 @@ window.DATA = {
 
   projects: [
     {
+      name: "LandTech 2026",
+      tag: "University Hackathon Platform · DIU CSE",
+      status: "LIVE",
+      period: "Sep — Oct 2026",
+      url: "https://landtech.diu.edu.bd/",
+      role: "Organiser & QA Tester · CSE-TECH",
+      reel: "landtech",
+      blurb:
+        "LandTech Innovation Hackathon 2026 — Daffodil International University's land-records hackathon (track: Digital Land Records, Verification & Fraud Prevention), run end to end on the LandHack platform: team registration with 300 BDT mobile-money fee verification, mentor pairing, a two-round judging app, a live hall display and published standings. I was on the CSE-TECH organising team and owned QA — writing the end-to-end test plan across every role surface and tracing failures to root cause before the event went live.",
+      highlights: [
+        "Wrote the full-lifecycle E2E test plan (TestSprite): super-admin setup, 9-step event wizard, registration, fee verification, judging and hall display",
+        "Covered 15 routes across 7 role surfaces (participant, mentor, judge, committee, control room, setup, platform) and filed root-cause reports for failing cases",
+        "Built a local React + Vite test-bed replica to reproduce last-mile defects in live standings, judge-score propagation and results freeze",
+      ],
+      stack: ["E2E Testing", "TestSprite", "QA / RCA", "React", "Vite", "Laravel", "Inertia"],
+    },
+    {
       name: "URA-Shree",
       tag: "From-Scratch Local LLM & Autonomous Coding Agent",
       status: "LIVE / OSS",
@@ -230,6 +247,13 @@ window.DATA = {
   ],
 
   experience: [
+    {
+      role: "Organiser & QA Tester",
+      org: "LandTech Innovation Hackathon 2026 · CSE-TECH, DIU",
+      period: "Sep 2026 — Oct 2026",
+      place: "Daffodil Smart City, Dhaka",
+      desc: "Organising-team member for DIU CSE's land-records hackathon (50-team cap, 25 finalists, 100,000 BDT prize pool). Owned platform QA: end-to-end test plan across all role surfaces, registration and fee-verification flows, judge scoring and the live hall display, with root-cause reports for every failure.",
+    },
     {
       role: "App & Web Developer",
       org: "Independent & Open Source Products",
