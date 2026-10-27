@@ -62,12 +62,12 @@ window.DATA = {
       url: "https://landtech.diu.edu.bd/",
       role: "Organiser & QA Tester · CSE-TECH",
       reel: "landtech",
+      linkPill: true,
       blurb:
-        "LandTech Innovation Hackathon 2026 — Daffodil International University's land-records hackathon (track: Digital Land Records, Verification & Fraud Prevention), run end to end on the LandHack platform: team registration with 300 BDT mobile-money fee verification, mentor pairing, a two-round judging app, a live hall display and published standings. I was on the CSE-TECH organising team and owned QA — writing the end-to-end test plan across every role surface and tracing failures to root cause before the event went live.",
+        "DIU CSE's land-records hackathon, run end to end on the LandHack platform. On the CSE-TECH organising team, I owned QA before launch.",
       highlights: [
-        "Wrote the full-lifecycle E2E test plan (TestSprite): super-admin setup, 9-step event wizard, registration, fee verification, judging and hall display",
-        "Covered 15 routes across 7 role surfaces (participant, mentor, judge, committee, control room, setup, platform) and filed root-cause reports for failing cases",
-        "Built a local React + Vite test-bed replica to reproduce last-mile defects in live standings, judge-score propagation and results freeze",
+        "E2E test plan across registration, fee checks, judging and hall display",
+        "7 role surfaces tested · failing cases traced to root cause",
       ],
       stack: ["E2E Testing", "TestSprite", "QA / RCA", "React", "Vite", "Laravel", "Inertia"],
     },

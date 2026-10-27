@@ -2710,6 +2710,39 @@
   margin-top: 10px;
 }
 
+.wi .link-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 14px;
+  padding: 9px 16px;
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  transition: background .25s, color .25s;
+}
+
+.wi .link-pill i {
+  width: 7px; height: 7px; border-radius: 50%; flex: none;
+  background: var(--accent);
+  animation: ping 2.4s infinite;
+}
+
+.wi .link-pill:hover,
+.wi .link-pill:focus-visible {
+  background: var(--accent);
+  color: #fff;
+}
+
+.wi .link-pill:hover i,
+.wi .link-pill:focus-visible i { background: #fff; }
+
 .wi .blurb {
   color: var(--ink-2);
   font-size: 15.5px;

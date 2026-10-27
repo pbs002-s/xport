@@ -253,6 +253,7 @@ function WorkV3() {
                     <div className="meta"><span className="live"><i></i>{p.status}</span><span>{p.period}</span></div>
                     <h3>{p.name}</h3>
                     <div className="ptag">{p.tag} · {p.role}</div>
+                    {p.linkPill && <a className="link-pill" href={p.url} target="_blank" rel="noopener noreferrer"><i></i>{hostLabel(p)} <Icon.arrow /></a>}
                     <p className="blurb">{p.blurb}</p>
                     <ul className="hl">{p.highlights.map((h) => <li key={h}>{h}</li>)}</ul>
                     <div className="foot">
