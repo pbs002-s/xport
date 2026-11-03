@@ -7,6 +7,7 @@ Thumbs.db
 .agents/
 .claude/
 skills-lock.json
+skills/
 
 # byte-identical duplicates of portfolio/videos/motion-reel.mp4
 /videos/
